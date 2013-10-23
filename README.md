@@ -14,10 +14,12 @@ var obj = {
 		prop3_1:{
 			prop3_1_1: 'c'
 		}
-	}
+	},
+	undef: undefined,
+	nul: null
 };
 
-//safe navigation
+//usage options
 var prop1 = nn(obj)('prop1').val; // 'a'
 
 var prop2_1 = nn(obj)('prop2')('prop2_1').val; // 'b'
@@ -32,8 +34,17 @@ var prop3_1_1 = nn(obj)('prop3')('prop3_1.prop3_1_1').val; // 'c'
 //or
 var prop3_1_1 = nn(obj)('prop3.prop3_1')('prop3_1_1').val; // 'c'
 
+//safe navigation
+var safe = nn(obj)('nul')('no')('issues')('at.all').val;
+var undef = nn(obj)('undef').val;
+
+//cached querying
 var nnObj = nn(obj);
-nnObj('prop1').val;
+
+var prop1 = nnObj('prop1').val; // 'a'
+
+var nnProp1 = nnObj('prop2');
+var prop2_1 = nnProp1('prop2_1').val; // 'b'
 
 ```
 #TODO
