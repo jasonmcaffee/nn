@@ -41,9 +41,12 @@ nnObj('prop1').val;
 ##API Enhancements
 
 ### Mutator
+```javasript
 nn(obj)('prop1', 1234);
+```
 
 ### Mutation Observer
+```javasript
 nn(obj, {
 	change:{
 		'prop1':function(newProp1Value){
@@ -51,6 +54,6 @@ nn(obj, {
 		}
 	}
 });
-
+```
 ### Search
 
