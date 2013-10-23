@@ -47,6 +47,13 @@ var nnProp1 = nnObj('prop2');
 var prop2_1 = nnProp1('prop2_1').val; // 'b'
 
 ```
+
+###Fiddle
+http://jsfiddle.net/jasonmcaffee/rdgmM/43/
+
+##Performance
+http://jsperf.com/never-null
+
 #TODO
 
 ##API Enhancements

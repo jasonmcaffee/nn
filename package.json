@@ -1,0 +1,26 @@
+{
+  "name": "nn",
+  "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jasonmcaffee/nn",
+  "author": {
+    "name": "Jason McAffee",
+    "email": "jasonlmcaffee@gmail.com",
+    "url": "http://www.jasonmcaffee.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jasonmcaffee/nn.git"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "bugs": {
+    "url": "https://github.com/jasonmcaffee/nn/issues"
+  },
+  "devDependencies": {
+    "grunt-contrib-jasmine": "~0.4.0",
+    "grunt": "~0.4.0"
+  },
+  "dependencies": {}
+}
