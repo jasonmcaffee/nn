@@ -21,7 +21,7 @@
 
     /**
     * Initialization function
-    * @param {object} obj - the query object. ie   
+    * @param {object} obj - the query object. 
     * @returns {function} - closure bound to the query object.
     */
 	function nn(obj){
