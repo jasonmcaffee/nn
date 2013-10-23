@@ -14,6 +14,17 @@ describe("nn", function() {
 					prop3_1_1: 'c'
 				}
 			},
+			prop4:[
+				'd', 
+				1, 
+				{
+					prop4_2: {
+						prop4_2_1: {
+							prop4_2_1_1: 'e'
+						}
+					}
+				}
+			],
 			undef: undefined,
 			nul: null,
 			notSupportedYet: function(){
@@ -68,8 +79,32 @@ describe("nn", function() {
 	});
 
 	it("should be able to handle null or undefined selectors", function(){
-		var undef = nn(null)(undefined)(null)(undefined).val;
+		var undef = nn(obj)(undefined)(null)(undefined).val;
 		expect(undef).toEqual(undefined);
+
+		undef = nn(null)(undefined)(null)(undefined).val;
+		expect(undef).toEqual(undefined);
+	});
+
+	it("should be able to access array items with a number selector", function(){
+		var prop4_0 = nn(obj)('prop4')(0).val;
+		expect(prop4_0).toEqual(obj.prop4[0]);
+
+		var prop4_1 = nn(obj)('prop4')(1).val;
+		expect(prop4_1).toEqual(obj.prop4[1]);
+
+		var prop4_2 = nn(obj)('prop4')(2).val;
+		expect(prop4_2).toEqual(obj.prop4[2]);
+		
+	});
+
+	it("should be able to access array items with a number selector and continue to select", function(){
+
+		var prop4_2 = nn(obj)('prop4')(2)('prop4_2').val;
+		expect(prop4_2).toEqual(obj.prop4[2].prop4_2);
+
+		var prop4_2_1 = nn(obj)('prop4')(2)('prop4_2.prop4_2_1').val;
+		expect(prop4_2_1).toEqual(obj.prop4[2].prop4_2.prop4_2_1);
 	});
 
 
