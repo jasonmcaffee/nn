@@ -6,10 +6,10 @@
 	*/
 	function select(selector, context){
 		//split properties into an array
-        var dotSplit = selector.split('.'),
+        var dotSplit = selector ? selector.split('.') : null,
         	propertyName;
         //iterate over each property and traverse contexts.
-        for(var i = 0; i < dotSplit.length; ++i){
+        for(var i = 0; dotSplit && i < dotSplit.length; ++i){
             propertyName = dotSplit[i];
             context = context ? context[propertyName] : undefined; //traverse contexts
         }
