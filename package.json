@@ -6,7 +6,7 @@
   "author": {
     "name": "Jason McAffee",
     "email": "jasonlmcaffee@gmail.com",
-    "url": "http://www.jasonmcaffee.com/"
+    "url": "http://nevernull.org/"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "grunt-contrib-jasmine": "~0.4.0",
+    "grunt-contrib-watch": "0.4.4",
     "grunt": "~0.4.0"
   },
   "dependencies": {}
