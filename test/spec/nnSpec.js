@@ -27,11 +27,20 @@ describe("nn", function() {
 			],
 			undef: undefined,
 			nul: null,
-			notSupportedYet: function(){
+			func1: function(){
 				return this.prop1;
 			}
 		};
 	});
+
+    function timed(f){
+        var start = new Date().getTime();
+        f();
+        var end = new Date().getTime();
+        var total = end - start;
+        console.info('time was: ' + total + ' ms');
+        return total;
+    }
 
 
 	it("should be able to access property values of object literals by using chained function calls", function() {
@@ -46,7 +55,6 @@ describe("nn", function() {
 
 		var prop3_1_1 = nn(obj)('prop3')('prop3_1')('prop3_1_1').val;
 		expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
-
 	});
 
 	it("should be able to access property values of object literals by using . notation selectors", function() {
@@ -95,7 +103,6 @@ describe("nn", function() {
 
 		var prop4_2 = nn(obj)('prop4')(2).val;
 		expect(prop4_2).toEqual(obj.prop4[2]);
-		
 	});
 
 	it("should be able to access array items with a number selector and continue to select", function(){
@@ -106,6 +113,48 @@ describe("nn", function() {
 		var prop4_2_1 = nn(obj)('prop4')(2)('prop4_2.prop4_2_1').val;
 		expect(prop4_2_1).toEqual(obj.prop4[2].prop4_2.prop4_2_1);
 	});
+
+    it("should be able to allow functions to be executed with their original context", function(){
+        var result = nn(obj)('func1').val();
+        expect(result).toEqual(obj.prop1);
+    });
+
+//    it("should be able to execute undefined functions", function(){
+//        var result = nn(obj)('nonExistingFunc').val();
+//        expect(result).toEqual(undefined);
+//    });
+
+    //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
+    it("should be relatively fast", function(){
+        var result, iterations = 100000, normalTime, nnTime;
+        function normal(){
+            if(obj && obj.prop3 && obj.prop3.prop3_1){
+                result = obj.prop3.prop3_1.prop3_1_1;
+            }
+        }
+
+        function usingNN(){
+            result = nn(obj)('prop3.prop3_1.prop3_1_1').val;
+        }
+
+        normalTime = timed(function(){
+            for(var i = 0; i < iterations; ++i){
+                normal();
+            }
+            expect(result).toEqual('c');
+            result = null;
+        });
+
+        nnTime = timed(function(){
+            for(var i = 0; i < iterations; ++i){
+                usingNN();
+            }
+            expect(result).toEqual('c');
+            result = null;
+        });
+        var relativeTimeToBeat = normalTime * 50 + 50;
+        expect(nnTime).toBeLessThan(relativeTimeToBeat);
+    })
 
 
 });

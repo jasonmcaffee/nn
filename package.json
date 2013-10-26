@@ -1,5 +1,5 @@
 {
-  "name": "nn",
+  "name": "nevernull",
   "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
   "version": "0.0.1",
   "homepage": "https://github.com/jasonmcaffee/nn",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "grunt-contrib-jasmine": "~0.4.0",
     "grunt-contrib-watch": "0.4.4",
-    "grunt": "~0.4.0"
+    "grunt": "0.4.1"
   },
   "dependencies": {}
 }

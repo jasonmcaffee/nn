@@ -2,6 +2,7 @@
 	'use strict';
 	var numberType = typeof 0,
 		stringType = typeof "",
+        functionType = typeof function(){},
 		splitter = ".";
 
 	/**
@@ -11,7 +12,10 @@
 	function select(selector, context){
         var selectorType = typeof selector,
         	dotSplit,
-        	propertyName;
+        	propertyName,
+            previousContext, //needed for function execution
+            argumentsLength = arguments.length;
+
         //determine what to do based on the selector type.
         if(selectorType === stringType){
         	dotSplit = selector.split(splitter); 
@@ -20,10 +24,19 @@
         }else{
         	context = null;//fix issue with nn(obj)(undefined)
         }
+
         //iterate over each property and traverse contexts.
         for(var i = 0; dotSplit && i < dotSplit.length; ++i){
             propertyName = dotSplit[i];
+            previousContext = context;
             context = context ? context[propertyName] : undefined; //traverse contexts
+        }
+
+        //allow functions to have correct context
+        if(typeof context === functionType){
+            context = function(){
+                return previousContext[propertyName]();
+            }
         }
         //closure bound to the last context
         var result = function(s){ return select(s, context); };
