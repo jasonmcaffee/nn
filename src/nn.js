@@ -2,7 +2,8 @@
 	'use strict';
 	var numberType = typeof 0,
 		stringType = typeof "",
-        functionType = typeof function(){},
+        emptyFunction = function(){}, //needed for undefined function execution
+        functionType = typeof emptyFunction,
 		splitter = ".";
 
 	/**
@@ -32,15 +33,16 @@
             context = context ? context[propertyName] : undefined; //traverse contexts
         }
 
-        //allow functions to have correct context
-        if(typeof context === functionType){
-            context = function(){
-                return previousContext[propertyName]();
-            }
-        }
         //closure bound to the last context
         var result = function(s){ return select(s, context); };
-        result.val = context; //allow the last context to be accessed at any time.
+        result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
+        //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
+        //passing it the arguments and the context of the real function's parent.
+        result.function = function(){
+            var potentialFunc = previousContext && previousContext[propertyName] ? previousContext[propertyName] : undefined;
+            var isFunc = typeof potentialFunc === functionType;
+            return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;
+        };
         return result;
     }
 

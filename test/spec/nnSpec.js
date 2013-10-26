@@ -7,7 +7,10 @@ describe("nn", function() {
 		obj = {
 			prop1: 'a', 
 			prop2: {
-				prop2_1: 'b'
+				prop2_1: 'b',
+                func2:function(param){
+                    return this.prop2_1 + param;
+                }
 			},
 			prop3: {
 				prop3_1:{
@@ -114,15 +117,23 @@ describe("nn", function() {
 		expect(prop4_2_1).toEqual(obj.prop4[2].prop4_2.prop4_2_1);
 	});
 
-    it("should be able to allow functions to be executed with their original context", function(){
-        var result = nn(obj)('func1').val();
+    it("should allow functions to be executed with their original context", function(){
+        var result = nn(obj)('func1').function();
         expect(result).toEqual(obj.prop1);
     });
 
-//    it("should be able to execute undefined functions", function(){
-//        var result = nn(obj)('nonExistingFunc').val();
-//        expect(result).toEqual(undefined);
-//    });
+    it("should allow functions to be executed with parameters", function(){
+       var nnResult =  nn(obj)('prop2.func2').function('test');
+       var nnResult2 = nn(obj)('prop2')('func2').function('test');
+       var normalResult = obj.prop2.func2('test');
+       expect(nnResult).toEqual(normalResult);
+       expect(nnResult2).toEqual(normalResult);
+    });
+
+    it("should be able to execute undefined functions", function(){
+        var result = nn(obj)('nonExistingFunc').function(123);
+        expect(result).toEqual(undefined);
+    });
 
     //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
     it("should be relatively fast", function(){
@@ -154,7 +165,7 @@ describe("nn", function() {
         });
         var relativeTimeToBeat = normalTime * 50 + 50;
         expect(nnTime).toBeLessThan(relativeTimeToBeat);
-    })
+    });
 
 
 });
