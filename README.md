@@ -115,6 +115,11 @@ http://jsfiddle.net/jasonmcaffee/rdgmM/43/
 ##Performance
 http://jsperf.com/never-null/5
 
+##Size
+Original: 2505 bytes.
+Minified: 429 bytes.
+Gzipped:  131 bytes.
+
 ##Future API Enhancements
 
 ### nn Core
