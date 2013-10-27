@@ -1,13 +1,17 @@
 {
   "name": "nevernull",
   "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "homepage": "https://github.com/jasonmcaffee/nn",
   "author": {
     "name": "Jason McAffee",
     "email": "jasonlmcaffee@gmail.com",
     "url": "http://nevernull.org/"
   },
+  "keywords":[
+      "null pointer exception", "never null", "nn", "TypeError cannot access property", "TypeError cannot access property of undefined", "of undefined", "safe navigation", "query object"
+  ],
+  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/jasonmcaffee/nn.git"
@@ -25,5 +29,6 @@
     "grunt": "0.4.1",
     "handlebars": "1.0.12"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "main": "dist/commonjs/nn-0.0.3.js"
 }

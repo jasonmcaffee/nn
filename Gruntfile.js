@@ -4,6 +4,8 @@ module.exports = function (grunt) {
 
     var buildVersion = "0.0.3",
         minFileName = "nn-" + buildVersion + ".min.js",
+        nnCoreCommonJsFileName = "nn-" + buildVersion + ".js",
+        nnCoreCommonJsDistFilePath = 'dist/commonjs/' + nnCoreCommonJsFileName,
         nnCoreTemplateSrcFilePath = 'src/nn.hbs.js',
         nnCoreDistFilePath = 'dist/' + minFileName,
         uglifyConfig = {};
@@ -15,8 +17,9 @@ module.exports = function (grunt) {
             core:{
                 templateSrcFilePath: nnCoreTemplateSrcFilePath,
                 distFilePath: nnCoreDistFilePath,
+                commonJsDistFilePath: nnCoreCommonJsDistFilePath,
                 templateData:{
-                    test: true
+
                 }
             }
         },
@@ -60,6 +63,21 @@ module.exports = function (grunt) {
         var nnCoreTemplateFunction = handlebars.compile(nnCoreTemplate);
         var nnCoreJs = nnCoreTemplateFunction(coreConfig.templateData);
         grunt.file.write(coreConfig.distFilePath, nnCoreJs);
+
+        //build commonjs module
+        coreConfig.templateData.commonjs = true;
+        var nnCoreJs = nnCoreTemplateFunction(coreConfig.templateData);
+        grunt.file.write(coreConfig.commonJsDistFilePath, nnCoreJs);
+        coreConfig.templateData.commonjs = false;//reset
+
+
+    });
+
+    grunt.registerTask('test-commonjs-module', '', function(){
+        var nn = require('nevernull');
+        var obj = {prop1:'123'};
+        var val = nn(obj)('prop1').val;
+        console.log('value is: ' + val);
     });
 
     grunt.registerTask('compile-nn-templates', ['compile-nn-core-templates']);

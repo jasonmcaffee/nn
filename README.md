@@ -1,188 +1,133 @@
 #nn
-Allows safe navigation through properties of an object in a manner that is similar to bracket notation.
-i.e. Avoid "TypeError: Cannot read property '{propertyName}' of undefined".
+nevernull allows safe navigation through properties of an object in a manner that is similar to bracket notation.
 
+If any of the queried properties of the object are null or undefined, no exception will be thrown.
+
+i.e. You can avoid exceptions like "TypeError: Cannot read property '{propertyName}' of undefined".
+
+## Installation
+
+### Browser
+Minified 0.0.3 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.3.min.js
+
+### NPM
+#### Install
+```
+npm install nevernull
+```
+
+#### Node
+```javascript
+var nn = require('nevernull');
+
+nn(obj)('prop1').val; // 'a'
+```
 ##Usage
+Example Object:
 ```javasript
 //example object we wish to query
 var obj = {
-	prop1: 'a', 
-	prop2: {
-		prop2_1: 'b'
-	},
-	prop3: {
-		prop3_1: {
-			prop3_1_1: 'c'
-		}
-	},
-	prop4: ['a', 'b', 'c'],
-	undef: undefined,
-	nul: null,
-	notSupportedYet: function(){
-		return this.prop1;
-	}
+    prop1: 'a',
+    prop2: {
+        prop2_1: 'b',
+        func2:function(param1, param2, param3){
+            return this.prop2_1 + param1 + param2 + param3;
+        }
+    },
+    prop3: {
+        prop3_1:{
+            prop3_1_1: 'c'
+        }
+    },
+    prop4:[
+        'd',
+        1,
+        {
+            prop4_2: {
+                prop4_2_1: {
+                    prop4_2_1_1: 'e'
+                }
+            }
+        }
+    ],
+    undef: undefined,
+    nul: null,
+    func1: function(){
+        return this.prop1;
+    }
 };
-
-//usage options
+```
+### Query using dot notation format
+nevernull allows you to pass in a query in the dot notation format.
+```javascript
 var prop1 = nn(obj)('prop1').val; // 'a'
 
-var prop2_1 = nn(obj)('prop2')('prop2_1').val; // 'b'
-//or
-var prop2_1 = nn(obj)('prop2.prop2_1').val; // 'b'
-
-var prop3_1_1 = nn(obj)('prop3')('prop3_1')('prop3_1_1').val; // 'c'
-//or
 var prop3_1_1 = nn(obj)('prop3.prop3_1.prop3_1_1').val; // 'c'
+
+var undef = nn(obj)('does.not.exist').val; // undefined
+
+var undef = nn(undefined)(undefined).val; // undefined
+```
+
+### Query using chained selectors
+nevernull returns a new function so you can
+```javascript
+var prop3_1_1 = nn(obj)('prop3')('prop3_1')('prop3_1_1').val; // 'c'
 //or
 var prop3_1_1 = nn(obj)('prop3')('prop3_1.prop3_1_1').val; // 'c'
 //or
 var prop3_1_1 = nn(obj)('prop3.prop3_1')('prop3_1_1').val; // 'c'
 
-//safe navigation
-var safe = nn(obj)('nul')('no')('issues')('at.all').val;
-var undef = nn(obj)('undef').val;
+var undef = nn(undefined)(undefined)(null)(undefined).val; // undefined
+```
 
-//cached querying
+### Safely invoke functions
+By calling .function(), you can safely invoke the function property of an object.
+```javascript
+var nnResult =  nn(obj)('prop2.func2').function('test', 'passing', 'params');  // 'btestpassingparams'
+var nnResult2 = nn(obj)('prop2')('func2').function('test', 'passing', 'params'); // 'btestpassingparams'
+var undef = nn(obj)(undefined).function('test', 'passing', 'params'); // undefined
+```
+### Cached object querying
+```javascript
 var nnObj = nn(obj);
 
 var prop1 = nnObj('prop1').val; // 'a'
 
 var nnProp1 = nnObj('prop2');
 var prop2_1 = nnProp1('prop2_1').val; // 'b'
-
 ```
 
 ###Fiddle
 http://jsfiddle.net/jasonmcaffee/rdgmM/43/
 
 ##Performance
-http://jsperf.com/never-null
+http://jsperf.com/never-null/5
 
-```javascript
-function timed(f){
-   var start = new Date().getTime();
-   f();
-   var end = new Date().getTime();
-   console.log('time: ' + (end - start));
-}
+##Future API Enhancements
 
-function loop(n, f){
-   for(var i = 0; i < n; ++i){
-      f();
-   }
-}
-
-loop(100, function(){
-    timed(function(){
-   		for(var i = 0; i < 1000000; ++i){
-      		nn(obj)('prop1');
-   		}
-	});
-});
-
-//result (chrome Version 30.0.1599.101 on Mac OS X version 10.7.5 2.3GHz Intel Core i7   8GB 1333 MHz DDR3)
-/*
-time: 1017
-time: 1005
-time: 1017
-time: 1024
-time: 1016
-time: 1004
-time: 1013
-time: 1004
-time: 1007
-time: 1029
-time: 1018
-time: 1006
-time: 1036
-time: 1030
-time: 1022
-time: 1036
-time: 1003
-time: 1039
-time: 1041
-time: 1030
-time: 900
-time: 898
-time: 900
-time: 902
-time: 908
-time: 900
-time: 898
-time: 902
-time: 887
-time: 884
-time: 888
-time: 896
-time: 890
-time: 892
-time: 887
-time: 888
-time: 889
-time: 889
-time: 891
-time: 890
-time: 898
-time: 894
-time: 891
-time: 886
-time: 889
-time: 887
-time: 889
-time: 892
-time: 889
-time: 889
-time: 890
-time: 892
-time: 895
-time: 887
-time: 887
-time: 893
-time: 888
-time: 891
-time: 890
-time: 887
-time: 888
-time: 892
-time: 889
-time: 887
-time: 892
-time: 894
-time: 895
-time: 890
-time: 887
-time: 889
-time: 886
-time: 889
-time: 889
-time: 892
-time: 886
-*/
-
-```
-
-#TODO
-
-##API Enhancements
-
-### Mutator
+### nn Core
+#### Mutator
+All setting of props.
 ```javasript
 nn(obj)('prop1', 1234);
 ```
 
-### Mutation Observer
-```javasript
-nn(obj, {
-	change:{
-		'prop1':function(newProp1Value){
-
-		}
-	}
-});
+#### Whenable
+Allow callback functions to execute for when the property exists
+```javascript
+nn(obj)('prop1').exists(function(propValue, obj){...});
 ```
 
-### Array Accessor
-nn(obj)('prop4')(0).val; //should be 'a'
+### nn Observer
+#### Mutation Observer
+```javasript
+nn(obj, {'set prop1': function(newVal, oldVal, obj){...}});
+```
 
-### Search
+### nn Search (to be separate include from nn Core
+#### Select all values
+```javascript
+var arrayOfAllProp1_1Values = nn(obj)('* prop1_1');
+```
 

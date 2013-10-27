@@ -62,9 +62,7 @@
     }
 
     //assign nn to the global scope.
-    //{{#if commonjs}}
+    //
     module.exports = nn;
-    //{{else}}
-    window.nn = nn;
-    //{{/if}}
+    //
 })();
