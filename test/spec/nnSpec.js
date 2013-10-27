@@ -8,8 +8,8 @@ describe("nn", function() {
 			prop1: 'a', 
 			prop2: {
 				prop2_1: 'b',
-                func2:function(param){
-                    return this.prop2_1 + param;
+                func2:function(param1, param2, param3){
+                    return this.prop2_1 + param1 + param2 + param3;
                 }
 			},
 			prop3: {
@@ -58,6 +58,9 @@ describe("nn", function() {
 
 		var prop3_1_1 = nn(obj)('prop3')('prop3_1')('prop3_1_1').val;
 		expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
+
+        var nul = nn(obj)('nul').val;
+        expect(nul).toEqual(obj.nul);
 	});
 
 	it("should be able to access property values of object literals by using . notation selectors", function() {
@@ -123,9 +126,9 @@ describe("nn", function() {
     });
 
     it("should allow functions to be executed with parameters", function(){
-       var nnResult =  nn(obj)('prop2.func2').function('test');
-       var nnResult2 = nn(obj)('prop2')('func2').function('test');
-       var normalResult = obj.prop2.func2('test');
+       var nnResult =  nn(obj)('prop2.func2').function('test', 'passing', 'params');
+       var nnResult2 = nn(obj)('prop2')('func2').function('test', 'passing', 'params');
+       var normalResult = obj.prop2.func2('test', 'passing', 'params');
        expect(nnResult).toEqual(normalResult);
        expect(nnResult2).toEqual(normalResult);
     });

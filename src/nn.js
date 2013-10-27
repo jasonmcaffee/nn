@@ -7,6 +7,7 @@
 		splitter = ".";
 
 	/**
+     * TODO: try providing a select that takes n params "prop1", "prop1_1", "prop2" if performance improves because of it.
 	* Recursive query select function generator.
 	* @returns {function} - closure bound to the last context
 	*/
@@ -14,8 +15,7 @@
         var selectorType = typeof selector,
         	dotSplit,
         	propertyName,
-            previousContext, //needed for function execution
-            argumentsLength = arguments.length;
+            previousContext; //needed for function execution
 
         //determine what to do based on the selector type.
         if(selectorType === stringType){
