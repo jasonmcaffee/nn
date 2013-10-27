@@ -73,7 +73,7 @@ var undef = nn(undefined)(undefined).val; // undefined
 ```
 
 ### Query using chained selectors
-nevernull returns a new function so you can
+nevernull returns a new function so you can chain queries together:
 ```javascript
 var prop3_1_1 = nn(obj)('prop3')('prop3_1')('prop3_1_1').val; // 'c'
 //or
