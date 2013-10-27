@@ -23,7 +23,7 @@
         }else if(selectorType === numberType){
         	dotSplit = [selector];
         }else{
-        	context = null;//fix issue with nn(obj)(undefined)
+        	context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
         }
 
         //iterate over each property and traverse contexts.
