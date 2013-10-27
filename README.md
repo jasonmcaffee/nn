@@ -23,6 +23,9 @@ var nn = require('nevernull');
 nn(obj)('prop1').val; // 'a'
 ```
 ##Usage
+Take a look at the spec for all usages:
+https://github.com/jasonmcaffee/nn/blob/master/test/spec/nnSpec.js
+
 Example Object:
 ```javasript
 //example object we wish to query
