@@ -112,6 +112,18 @@ var prop2_1 = nnProp1('prop2_1').val; // 'b'
 ###Fiddle
 http://jsfiddle.net/jasonmcaffee/rdgmM/43/
 
+###Compatability
+nevernull should work in all browsers.
+
+It has been tested on:
+
+IE 8, 9, 10
+
+Chrome
+
+Firefox
+
+
 ##Performance
 http://jsperf.com/never-null/5
 
