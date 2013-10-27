@@ -109,6 +109,12 @@ describe("nn", function() {
 
 		var prop4_2 = nn(obj)('prop4')(2).val;
 		expect(prop4_2).toEqual(obj.prop4[2]);
+
+        var undef = nn(obj)('prop4')(999).val;
+        expect(undef).toEqual(undefined);
+
+        var undef = nn(obj)('prop4')(undefined).val;
+        expect(undef).toEqual(undefined);
 	});
 
 	it("should be able to access array items with a number selector and continue to select", function(){

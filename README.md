@@ -91,6 +91,14 @@ var nnResult =  nn(obj)('prop2.func2').function('test', 'passing', 'params');  /
 var nnResult2 = nn(obj)('prop2')('func2').function('test', 'passing', 'params'); // 'btestpassingparams'
 var undef = nn(obj)(undefined).function('test', 'passing', 'params'); // undefined
 ```
+### Safely query arrays
+```javascript
+var prop4_2_1 = nn(obj)('prop4')(2)('prop4_2.prop4_2_1').val; // {prop4_2_1_1: 'e'}
+
+var undef = nn(obj)('prop4')(999).val; // undefined
+
+var undef = nn(obj)('prop4')(undefined).val;
+```
 ### Cached object querying
 ```javascript
 var nnObj = nn(obj);
@@ -110,6 +118,11 @@ http://jsperf.com/never-null/5
 ##Future API Enhancements
 
 ### nn Core
+
+#### Query arrays using single string selector
+```javascript
+nn(obj)('prop4[0]').val; // 'd'
+```
 #### Mutator
 All setting of props.
 ```javasript
