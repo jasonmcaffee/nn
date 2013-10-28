@@ -116,11 +116,13 @@ http://jsfiddle.net/jasonmcaffee/rdgmM/43/
 nevernull is written in vanilla javascript, and should work in all browsers.
 
 It has been tested on:
-IE 8, 9, 10
-Chrome
-Firefox
-Safari
-ios 7 Safari
+* IE 8, 9, 10
+* Chrome
+* Firefox
+* Safari
+* ios 7 Safari
+* Chrome Mobile 30
+* Android 4.2.2
 
 
 ##Performance

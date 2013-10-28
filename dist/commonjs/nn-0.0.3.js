@@ -1,4 +1,3 @@
-var nn;
 (function() {
     'use strict';
     var numberType = typeof 0,
@@ -56,7 +55,7 @@ var nn;
      * @param {object} obj - the query object.
      * @returns {function} - closure bound to the query object.
      */
-    function _nn(obj) {
+    function nn(obj) {
         return function (sel) {
             return select(sel, obj);
         }
@@ -64,6 +63,6 @@ var nn;
 
     //assign nn to the global scope.
     //
-    module.exports = _nn;
+    module.exports = nn;
     //
 })();
