@@ -144,7 +144,7 @@ Gzipped:  131 bytes.
 nn(obj)('prop4[0]').val; // 'd'
 ```
 #### Mutator
-All setting of props.
+Allow setting of props.
 ```javasript
 nn(obj)('prop1', 1234);
 ```
