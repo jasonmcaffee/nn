@@ -16,7 +16,7 @@ Minified 0.0.3 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.3.min
 npm install nevernull
 ```
 
-#### Node
+#### Use in Node
 ```javascript
 var nn = require('nevernull');
 
