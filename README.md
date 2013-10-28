@@ -109,8 +109,9 @@ var nnProp1 = nnObj('prop2');
 var prop2_1 = nnProp1('prop2_1').val; // 'b'
 ```
 
-###Fiddle
-http://jsfiddle.net/jasonmcaffee/rdgmM/43/
+###Try it out
+You can use this jasmine spec runner on jsfiddle to try nevernull:
+http://jsfiddle.net/jasonmcaffee/mw7ky/2/
 
 ###Compatability
 nevernull is written in vanilla javascript, and should work in all browsers.
