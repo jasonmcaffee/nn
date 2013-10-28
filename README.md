@@ -5,6 +5,11 @@ If any of the queried properties of the object are null or undefined, no excepti
 
 i.e. You can avoid exceptions like "TypeError: Cannot read property '{propertyName}' of undefined".
 
+##Try it out!
+You can use this fiddle to try nevernull:
+
+http://jsfiddle.net/jasonmcaffee/mw7ky/3/
+
 ## Installation
 
 ### Browser
@@ -108,11 +113,6 @@ var prop1 = nnObj('prop1').val; // 'a'
 var nnProp1 = nnObj('prop2');
 var prop2_1 = nnProp1('prop2_1').val; // 'b'
 ```
-
-###Try it out
-You can use this jasmine spec runner on jsfiddle to try nevernull:
-
-http://jsfiddle.net/jasonmcaffee/mw7ky/3/
 
 ###Compatability
 nevernull is written in vanilla javascript, and should work in all browsers.
