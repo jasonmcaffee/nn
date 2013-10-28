@@ -42,7 +42,7 @@
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
         //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
         //passing it the arguments and the context of the real function's parent.
-        result.function = function () {
+        result.func = function () {
             var potentialFunc = previousContext && previousContext[propertyName] ? previousContext[propertyName] : undefined;
             var isFunc = typeof potentialFunc === functionType;
             return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;

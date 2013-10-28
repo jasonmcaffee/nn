@@ -127,20 +127,20 @@ describe("nn", function () {
     });
 
     it("should allow functions to be executed with their original context", function () {
-        var result = nn(obj)('func1').function();
+        var result = nn(obj)('func1').func();
         expect(result).toEqual(obj.prop1);
     });
 
     it("should allow functions to be executed with parameters", function () {
-        var nnResult = nn(obj)('prop2.func2').function('test', 'passing', 'params');
-        var nnResult2 = nn(obj)('prop2')('func2').function('test', 'passing', 'params');
+        var nnResult = nn(obj)('prop2.func2').func('test', 'passing', 'params');
+        var nnResult2 = nn(obj)('prop2')('func2').func('test', 'passing', 'params');
         var normalResult = obj.prop2.func2('test', 'passing', 'params');
         expect(nnResult).toEqual(normalResult);
         expect(nnResult2).toEqual(normalResult);
     });
 
     it("should be able to execute undefined functions", function () {
-        var result = nn(obj)('nonExistingFunc').function(123);
+        var result = nn(obj)('nonExistingFunc').func(123);
         expect(result).toEqual(undefined);
     });
 

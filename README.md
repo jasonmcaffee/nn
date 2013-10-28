@@ -85,11 +85,11 @@ var undef = nn(undefined)(undefined)(null)(undefined).val; // undefined
 ```
 
 ### Safely invoke functions
-By calling .function(), you can safely invoke the function property of an object.
+By calling .func(), you can safely invoke the function property of an object.
 ```javascript
-var nnResult =  nn(obj)('prop2.func2').function('test', 'passing', 'params');  // 'btestpassingparams'
-var nnResult2 = nn(obj)('prop2')('func2').function('test', 'passing', 'params'); // 'btestpassingparams'
-var undef = nn(obj)(undefined).function('test', 'passing', 'params'); // undefined
+var nnResult =  nn(obj)('prop2.func2').func('test', 'passing', 'params');  // 'btestpassingparams'
+var nnResult2 = nn(obj)('prop2')('func2').func('test', 'passing', 'params'); // 'btestpassingparams'
+var undef = nn(obj)(undefined).func('test', 'passing', 'params'); // undefined
 ```
 ### Safely query arrays
 ```javascript
