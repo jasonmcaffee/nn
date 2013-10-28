@@ -1,4 +1,4 @@
-#nn
+#Never Null
 nevernull allows safe navigation through properties of an object in a manner that is similar to bracket notation.
 
 If any of the queried properties of the object are null or undefined, no exception will be thrown.
