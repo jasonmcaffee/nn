@@ -10,6 +10,11 @@ describe("nn", function () {
                 prop2_1: 'b',
                 func2: function (param1, param2, param3) {
                     return this.prop2_1 + param1 + param2 + param3;
+                },
+                prop2_2: 'b2',
+                prop2_3:{
+                    prop2_3_1: 'f',
+                    prop2_3_2: 'g'
                 }
             },
             prop3: {
@@ -144,6 +149,36 @@ describe("nn", function () {
         expect(result).toEqual(undefined);
     });
 
+    it("should build a full selector", function(){
+//        var prop1 = nn(obj)('prop1', 123).val;
+//        expect(prop1).toEqual(123);
+//
+//        //should set prop1 to new object if it does not exist. (null, or undefined);
+//        var prop2_1 = nn(obj)('prop2.prop2_1', 123).val;
+//        expect(prop2_1).toEqual(123);
+//
+//        //and chain
+//        var prop1_1 = nn(obj)('prop1', {})('prop1_1', 123).val;
+//
+        //be careful
+        var nnObj = nn(obj);
+        var nnProp2 = nnObj('prop2');
+        var nnProp2selector = nnProp2._selectContext.fullSelector;
+        expect(nnProp2selector).toEqual('prop2');
+        expect(nnProp2._selectContext.currentDepth).toEqual(1);
+
+        var nnProp2_1selector = nnProp2('prop2_1')._selectContext.fullSelector;
+        expect(nnProp2_1selector).toEqual('prop2.prop2_1');
+
+        var nnProp2_2selector = nnProp2('prop2_2')._selectContext.fullSelector;
+        expect(nnProp2_2selector).toEqual('prop2.prop2_2');
+
+        //var nnProp2_1 = nnProp2('prop2_1')._selectContext.fullSelector;
+        //expect(nnProp2_1).toEqual('prop2.prop2_1');
+        //this cannot work
+        //nn(null)('prop1', 123);
+        //what to do when they set a property of a number? fail silently?
+    });
     //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
     it("should be relatively fast", function () {
         var result, iterations = 100000, normalTime, nnTime;

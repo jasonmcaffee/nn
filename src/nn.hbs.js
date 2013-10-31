@@ -12,12 +12,19 @@
      * Recursive query select function generator.
      * @returns {function} - closure bound to the last context
      */
-    function select(selector, context) {
+    function select(nnContext, previousSelectContext, selector, context) {
         var selectorType = typeof selector,
             dotSplit,
             propertyName,
-            previousContext; //needed for function execution
+            previousContext, //needed for function execution
+            selectContext = {
+                previousDepth:previousSelectContext.currentDepth,
+                currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
+                fullSelector:previousSelectContext.fullSelector + (previousSelectContext.previousDepth > 0 ? splitter + selector : selector)
+            };
 
+
+        //console.info('fullSelector: ' + selectContext.fullSelector + ' depth: ' + depth + ' previousDepth: ' + selectContext.previousDepth); //+' currentDepth: ' + selectContext.currentDepth);
         //determine what to do based on the selector type.
         if (selectorType === stringType) {
             dotSplit = selector.split(splitter);
@@ -27,18 +34,23 @@
             context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
         }
 
-
-        //iterate over each property and traverse contexts.
-        for (var i = 0; dotSplit && i < dotSplit.length; ++i){
+        //selectContext.previousDepth = selectContext.currentDepth;
+        var dotSplitLength = dotSplit ? dotSplit.length : 0;
+        //console.info('dotSplitLength: ' + dotSplitLength);
+        //iterate over each property and traverse contexts
+        for (var i = 0; i < dotSplitLength; ++i){
             propertyName = dotSplit[i];
             previousContext = context;
             context = context ? context[propertyName] : undefined; //traverse contexts
         }
 
+        selectContext.currentDepth = dotSplitLength + selectContext.previousDepth -1;
+
         //closure bound to the last context
         var result = function (s) {
-            return select(s, context);
+            return select(nnContext, selectContext, s, context);
         };
+        result._selectContext = selectContext;
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
         //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
         //passing it the arguments and the context of the real function's parent.
@@ -56,8 +68,9 @@
      * @returns {function} - closure bound to the query object.
      */
     function nn(obj) {
+        var nnContext = {originalObject: obj};
         return function (sel) {
-            return select(sel, obj);
+            return select(nnContext, {currentDepth:1, previousDepth:0, fullSelector:""}, sel, obj);
         }
     }
 
