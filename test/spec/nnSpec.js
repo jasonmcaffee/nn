@@ -177,18 +177,23 @@ describe("nn", function () {
         expect(nnProp2_2selector).toEqual('prop2.prop2_2');
         expect(nnProp2_2._selectContext.currentDepth).toEqual(2);
 
+        expect(nnObj('prop2')('prop2_1')._selectContext.fullSelector).toEqual('prop2.prop2_1');
+        expect(nnObj('prop2.prop2_2')._selectContext.fullSelector).toEqual('prop2.prop2_2');
+
         var nnProp4 = nnObj('prop4');
         var nnProp4selector = nnProp4._selectContext.fullSelector;
         expect(nnProp4selector).toEqual('prop4');
 
-        var nnProp4index2 = nnObj(2);
+        var nnProp4index2 = nnObj('prop4')(2);
+        var nnProp4index2selector = nnProp4index2._selectContext.fullSelector;
+        expect(nnProp4index2selector).toEqual('prop4[2]');
 
 
         //var nnProp2_1 = nnProp2('prop2_1')._selectContext.fullSelector;
         //expect(nnProp2_1).toEqual('prop2.prop2_1');
         //this cannot work
         //nn(null)('prop1', 123);
-        //what to do when they set a property of a number? fail silently?
+        //what to do when they set a property of a number? fail silently? e.g. 2.someProp
     });
     //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
     it("should be relatively fast", function () {

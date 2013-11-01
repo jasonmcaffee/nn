@@ -5,7 +5,7 @@
         emptyFunction = function () {
         }, //needed for undefined function execution
         functionType = typeof emptyFunction,
-        splitter = ".";
+        splitter = ".", openArray = '[', closeArray = ']';
 
     /**
      * TODO: try providing a select that takes n params "prop1", "prop1_1", "prop2" if performance improves because of it.
@@ -16,12 +16,7 @@
         var selectorType = typeof selector,
             dotSplit,
             propertyName,
-            previousContext, //needed for function execution
-            selectContext = {
-                previousDepth:previousSelectContext.currentDepth,
-                currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
-                fullSelector:previousSelectContext.fullSelector + (previousSelectContext.previousDepth > -1 ? splitter + selector : selector)
-            };
+            previousContext; //needed for function execution
 
         //determine what to do based on the selector type.
         if (selectorType === stringType) {
@@ -31,6 +26,17 @@
         } else {
             context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
         }
+
+        var selectContext = {
+            previousDepth:previousSelectContext.currentDepth,
+            currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
+            fullSelector:previousSelectContext.fullSelector +
+                (previousSelectContext.previousDepth > -1 ?
+                    selectorType === numberType ?
+                        openArray + selector + closeArray :
+                        splitter + selector :
+                    selector)
+        };
 
         //selectContext.previousDepth = selectContext.currentDepth;
         var dotSplitLength = dotSplit ? dotSplit.length : 0;
@@ -69,6 +75,9 @@
 //        result.num = function(defaultValue){
 //
 //        }
+        //TODO: delete() ????
+        //TODO: .propName ????
+        //TODO: parent() ? or up()?
         return result;
     }
 
