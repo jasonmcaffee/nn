@@ -167,11 +167,22 @@ describe("nn", function () {
         expect(nnProp2selector).toEqual('prop2');
         expect(nnProp2._selectContext.currentDepth).toEqual(1);
 
+        var nnProp2_1 = nnProp2('prop2_1');
         var nnProp2_1selector = nnProp2('prop2_1')._selectContext.fullSelector;
         expect(nnProp2_1selector).toEqual('prop2.prop2_1');
+        expect(nnProp2_1._selectContext.currentDepth).toEqual(2);
 
+        var nnProp2_2= nnProp2('prop2_2');
         var nnProp2_2selector = nnProp2('prop2_2')._selectContext.fullSelector;
         expect(nnProp2_2selector).toEqual('prop2.prop2_2');
+        expect(nnProp2_2._selectContext.currentDepth).toEqual(2);
+
+        var nnProp4 = nnObj('prop4');
+        var nnProp4selector = nnProp4._selectContext.fullSelector;
+        expect(nnProp4selector).toEqual('prop4');
+
+        var nnProp4index2 = nnObj(2);
+
 
         //var nnProp2_1 = nnProp2('prop2_1')._selectContext.fullSelector;
         //expect(nnProp2_1).toEqual('prop2.prop2_1');
