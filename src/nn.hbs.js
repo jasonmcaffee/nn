@@ -62,7 +62,6 @@
         //create a context which can be bound to the next select depth.
 
         var selectContext = {
-            context: context,
             previousDepth:previousSelectContext.currentDepth, //the context of the previous select function (the parent object)
             currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
 
@@ -90,6 +89,9 @@
 
             context = context ? context[propertyName] : undefined; //traverse contexts
         }
+        //set the context (in case it was created/updated during set) allows us to chain nn(obj)('newProp', {})('prop1', 123); results in obj.newProp.prop1 == 123
+        selectContext.context = context;
+
         //update depth
         selectContext.currentDepth = dotSplitLength + selectContext.previousDepth;
         //console.info('fullSelector: ' + selectContext.fullSelector + ' prev depth: ' + selectContext.previousDepth + ' current depth: ' + selectContext.currentDepth);
