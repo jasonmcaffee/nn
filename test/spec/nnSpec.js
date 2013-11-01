@@ -149,7 +149,7 @@ describe("nn", function () {
         expect(result).toEqual(undefined);
     });
 
-    it("should build a full selector", function(){
+    it("should build a full selector and know depth in chain", function(){
 //        var prop1 = nn(obj)('prop1', 123).val;
 //        expect(prop1).toEqual(123);
 //
@@ -188,6 +188,20 @@ describe("nn", function () {
         var nnProp4index2selector = nnProp4index2._selectContext.fullSelector;
         expect(nnProp4index2selector).toEqual('prop4[2]');
 
+        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
+        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1')('prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
+        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
+        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
+
+        //test nulls
+        expect(nn(null)('1234')._selectContext.fullSelector).toEqual('1234');
+        expect(nn(undefined)('1234')._selectContext.fullSelector).toEqual('1234');
+        expect(nn(undefined)('1234')(null)._selectContext.fullSelector).toEqual('1234.null');
+
+        expect(nn(obj)(undefined)._selectContext.fullSelector).toEqual('undefined');
+        expect(nn(obj)(undefined)(null)._selectContext.fullSelector).toEqual('undefined.null');
+        expect(nn(obj)(undefined)(null)('prop1')._selectContext.fullSelector).toEqual('undefined.null.prop1');
+
 
         //var nnProp2_1 = nnProp2('prop2_1')._selectContext.fullSelector;
         //expect(nnProp2_1).toEqual('prop2.prop2_1');
@@ -195,38 +209,46 @@ describe("nn", function () {
         //nn(null)('prop1', 123);
         //what to do when they set a property of a number? fail silently? e.g. 2.someProp
     });
-    //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
-    it("should be relatively fast", function () {
-        var result, iterations = 100000, normalTime, nnTime;
 
-        function normal() {
-            if (obj && obj.prop3 && obj.prop3.prop3_1) {
-                result = obj.prop3.prop3_1.prop3_1_1;
-            }
-        }
+    it('should allow properties to be set', function(){
+        var nnObj = nn(obj);
+        expect(nnObj('prop1', 123).val).toEqual(123);
 
-        function usingNN() {
-            result = nn(obj)('prop3.prop3_1.prop3_1_1').val;
-        }
-
-        normalTime = timed(function () {
-            for (var i = 0; i < iterations; ++i) {
-                normal();
-            }
-            expect(result).toEqual('c');
-            result = null;
-        });
-
-        nnTime = timed(function () {
-            for (var i = 0; i < iterations; ++i) {
-                usingNN();
-            }
-            expect(result).toEqual('c');
-            result = null;
-        });
-        var relativeTimeToBeat = normalTime * 50 + 50;
-        expect(nnTime).toBeLessThan(relativeTimeToBeat);
+        expect(nnObj('newProp1', {}).val).toEqual({});
+        expect(nnObj('newProp1', {})('newProp1_1', 123).val).toEqual(123);
     });
+    //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
+//    it("should be relatively fast", function () {
+//        var result, iterations = 100000, normalTime, nnTime;
+//
+//        function normal() {
+//            if (obj && obj.prop3 && obj.prop3.prop3_1) {
+//                result = obj.prop3.prop3_1.prop3_1_1;
+//            }
+//        }
+//
+//        function usingNN() {
+//            result = nn(obj)('prop3.prop3_1.prop3_1_1').val;
+//        }
+//
+//        normalTime = timed(function () {
+//            for (var i = 0; i < iterations; ++i) {
+//                normal();
+//            }
+//            expect(result).toEqual('c');
+//            result = null;
+//        });
+//
+//        nnTime = timed(function () {
+//            for (var i = 0; i < iterations; ++i) {
+//                usingNN();
+//            }
+//            expect(result).toEqual('c');
+//            result = null;
+//        });
+//        var relativeTimeToBeat = normalTime * 50 + 50;
+//        expect(nnTime).toBeLessThan(relativeTimeToBeat);
+//    });
 
 
 });

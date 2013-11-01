@@ -19,7 +19,7 @@ module.exports = function (grunt) {
                 distFilePath: nnCoreDistFilePath,
                 commonJsDistFilePath: nnCoreCommonJsDistFilePath,
                 templateData:{
-
+                    version: buildVersion
                 }
             }
         },
