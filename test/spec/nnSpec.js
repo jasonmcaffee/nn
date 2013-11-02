@@ -2,7 +2,7 @@ describe("nn", function () {
     'use strict';
 
     //setup
-    var obj;
+    var obj, demoOneObj;
     beforeEach(function () {
         obj = {
             prop1: 'a',
@@ -39,6 +39,29 @@ describe("nn", function () {
                 return this.prop1;
             }
         };
+
+        demoOneObj = {
+            people: [
+                //person 1
+                {
+                    name:  {
+                        first: 'jason',
+                        last: 'mcaffee'
+                    }
+                },
+                null,
+                undefined,
+                {},
+                "",
+                123,
+                {
+                    name:{
+                        first: 'nolast'
+                    }
+                },
+                function(){}
+            ]
+        };
     });
 
     function timed(f) {
@@ -50,6 +73,65 @@ describe("nn", function () {
         return total;
     }
 
+    it("should demonstrate normal safe navigation compared to nn safe navigation", function(){
+
+        //normal usage
+        var normalUsageResult = [], fullName;
+        if(demoOneObj && demoOneObj.people){
+            for(var i = 0; i < demoOneObj.people.length; ++i){
+                var person = demoOneObj.people[i];
+                if(person && person.name){ //true story: i missed a check here for person and blew up when i started adding more test cases.
+                    fullName = person.name.first + " " + person.name.last;
+                    normalUsageResult.push(fullName);
+                }
+            }
+        }
+
+        validateResult(normalUsageResult);
+
+        //nn usage
+        var nnUsageResult1 = [], fullName;
+        nn(demoOneObj)('people').each(function(x, person, nnPerson){
+            if(nnPerson('name').val){
+                fullName = nnPerson('name.first').val + " " + nnPerson('name.last').val;
+                nnUsageResult1.push(fullName);
+            }
+        });
+
+        validateResult(nnUsageResult1);
+
+        //nn usage 2
+        var nnUsageResult2 = [], fullName;
+        for(var x = 0; x < nn(demoOneObj)('people.length').val; ++x){
+            var nnPerson = nn(demoOneObj)('people')(x);
+            if(nnPerson('name').val){
+                fullName = nnPerson('name.first').val + " " + nnPerson('name.last').val;
+                nnUsageResult2.push(fullName);
+            }
+        }
+
+        validateResult(nnUsageResult2);
+
+        //nn usage with caching
+        var nnUsageResult3 = [], fullName;
+        var people = nn(demoOneObj)('people');
+        for(var x = 0; x < people('length').val; ++x){
+            var nnPerson = people(x);
+            var nnPersonName = nnPerson('name');
+            if(nnPersonName.val){
+                fullName = nnPersonName('first').val + " " + nnPersonName('last').val;
+                nnUsageResult3.push(fullName);
+            }
+        }
+
+        validateResult(nnUsageResult3);
+
+        function validateResult(result){
+            expect(result.length).toEqual(2);
+            expect(result[0]).toEqual("jason mcaffee");
+            expect(result[1]).toEqual("nolast undefined");
+        }
+    });
 
     it("should be able to access property values of object literals by using chained function calls", function () {
         var prop1 = nn(obj)('prop1').val;
@@ -129,6 +211,8 @@ describe("nn", function () {
 
         var prop4_2_1 = nn(obj)('prop4')(2)('prop4_2.prop4_2_1').val;
         expect(prop4_2_1).toEqual(obj.prop4[2].prop4_2.prop4_2_1);
+
+        expect(nn(obj)('prop4')('length').val).toEqual(3);
     });
 
     it("should allow functions to be executed with their original context", function () {
@@ -149,17 +233,19 @@ describe("nn", function () {
         expect(result).toEqual(undefined);
     });
 
+//Tools ================================================================================================================
+    it("should provide an each function to simplify iterating over arrays", function(){
+        var resultCount = 0;
+        nn(obj)('prop4').each(function(i, item, nnItem){
+            expect(resultCount++).toEqual(i);
+            expect(obj.prop4[i]).toEqual(item);
+
+        });
+        expect(resultCount).toEqual(3);
+    });
+//Setting ==============================================================================================================
+    //precursor to being able to set. not sure if fullSelector will be public. for now, consider it internal and do not use it.
     it("should build a full selector and know depth in chain", function(){
-//        var prop1 = nn(obj)('prop1', 123).val;
-//        expect(prop1).toEqual(123);
-//
-//        //should set prop1 to new object if it does not exist. (null, or undefined);
-//        var prop2_1 = nn(obj)('prop2.prop2_1', 123).val;
-//        expect(prop2_1).toEqual(123);
-//
-//        //and chain
-//        var prop1_1 = nn(obj)('prop1', {})('prop1_1', 123).val;
-//
         //be careful
         var nnObj = nn(obj);
         var nnProp2 = nnObj('prop2');
@@ -202,21 +288,46 @@ describe("nn", function () {
         expect(nn(obj)(undefined)(null)._selectContext.fullSelector).toEqual('undefined.null');
         expect(nn(obj)(undefined)(null)('prop1')._selectContext.fullSelector).toEqual('undefined.null.prop1');
 
-
-        //var nnProp2_1 = nnProp2('prop2_1')._selectContext.fullSelector;
-        //expect(nnProp2_1).toEqual('prop2.prop2_1');
         //this cannot work
         //nn(null)('prop1', 123);
         //what to do when they set a property of a number? fail silently? e.g. 2.someProp
     });
 
-    it('should allow properties to be set', function(){
+    it('should allow object properties to be set', function(){
         var nnObj = nn(obj);
         expect(nnObj('prop1', 123).val).toEqual(123);
 
+        //objects
         expect(nnObj('newProp1', {}).val).toEqual({});
         expect(nnObj('newProp1', {})('newProp1_1', 123).val).toEqual(123);
+        expect(obj.newProp1.newProp1_1).toEqual(123);
+
+        var result = nnObj('newProp3',{ prop3_1:'a'})('prop3_2', 'b');
+        expect(result.val).toEqual('b');
+        expect(obj.newProp3.prop3_1).toEqual('a');
+        expect(obj.newProp3.prop3_2).toEqual('b');
+
     });
+
+    it('should allow array properties to be set', function(){
+        var nnObj = nn(obj);
+
+        //arrays
+        expect(nnObj('newArr1', ['replaced', 'the', 'deuce'])(0, 'what').val).toEqual('what');
+        expect(obj.newArr1[0]).toEqual('what');
+        expect(obj.newArr1[1]).toEqual('the');
+        expect(obj.newArr1[2]).toEqual('deuce');
+    });
+
+    it('should allow handle invalid setting', function(){
+        var nnObj = nn(obj);
+
+        //numbers - bad sets (eg. trying to give a number a property.  '123.someProp')
+        expect(nnObj('aNumber', 1)('numbersCantHaveProperties', 'what').val).toEqual(undefined);
+        expect(obj.aNumber).toEqual(1);
+    });
+
+//Speed Benchmark (just a rough guideline. doesnt always pass.) ========================================================
     //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
 //    it("should be relatively fast", function () {
 //        var result, iterations = 100000, normalTime, nnTime;
@@ -246,7 +357,8 @@ describe("nn", function () {
 //            expect(result).toEqual('c');
 //            result = null;
 //        });
-//        var relativeTimeToBeat = normalTime * 50 + 50;
+//        var setLogicTimeIncrease = 5;
+//        var relativeTimeToBeat = normalTime * 50 + 50 + setLogicTimeIncrease;
 //        expect(nnTime).toBeLessThan(relativeTimeToBeat);
 //    });
 

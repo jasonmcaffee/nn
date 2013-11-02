@@ -1,7 +1,7 @@
 /**
- * Never Null version {{version}}
+ * Never Null version 0.0.4
  *
- * {{! NOTE: this file is a template, and requires compilation before use. Check the dist folder for the compiled version. }}
+ * 
  *
  * The MIT License (MIT)
  *
@@ -157,9 +157,7 @@
     }
 
     //assign nn to the global scope.
-    //{{#if commonjs}}
+    //
     module.exports = nn;
-    //{{else}}
-    window.nn = nn;
-    //{{/if}}
+    //
 })();
