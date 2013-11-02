@@ -27,6 +27,19 @@
  */
 (function(){
     'use strict';
+
+    //Performance Considerations
+    //  inline work is slightly faster than a function call
+    //http://jsperf.com/inline-work-vs-call-function
+    //  if statements are faster than ternary
+    //http://jsperf.com/ternary-vs-switch/8
+    //  closures pretty fast
+    //http://jsperf.com/closure-vs-bind-vs-instance
+    //  triple equal is the same as double equal, unless comparing different types
+    //http://jsperf.com/triple-equals-vs-double-equals/9
+    //  named functions are slightly faster than faster than unnamed functions
+    //http://jsperf.com/named-vs-anonymous-functions/2
+
     var numberType = typeof 0,
         stringType = typeof "",
         emptyFunction = function () {
@@ -50,7 +63,7 @@
      * Recursive query select function generator.
      * @returns {function} - closure bound to the last context
      */
-    function select(nnContext, previousSelectContext, selector, context, newValue) {
+    function select(previousSelectContext, selector, context, newValue) {
         var selectorType = typeof selector,
             shouldSet = newValue,
             dotSplit,
@@ -92,8 +105,9 @@
             if(shouldSet){
                 set(previousSelectContext, selector, newValue);
             }
-
-            context = context ? context[propertyName] : undefined; //traverse contexts
+            if(context){
+                context = context[propertyName];
+            }
         }
         //set the context (in case it was created/updated during set) allows us to chain nn(obj)('newProp', {})('prop1', 123); results in obj.newProp.prop1 == 123
         selectContext.context = context;
@@ -103,8 +117,8 @@
         //console.info('fullSelector: ' + selectContext.fullSelector + ' prev depth: ' + selectContext.previousDepth + ' current depth: ' + selectContext.currentDepth);
 
         //closure bound to the last context
-        var result = function(s, newValue) {
-            return select(nnContext, selectContext, s, context, newValue);
+        function result(s, newValue) {
+            return select(selectContext, s, context, newValue);
         };
         result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
@@ -150,9 +164,10 @@
      * @returns {function} - closure bound to the query object.
      */
     function nn(obj) {
-        var nnContext = {originalObject: obj};
+        //create the context now as opposed to inside the returned closure. big perf increase.
+        var previousSelectContext = {currentDepth:0, previousDepth:-1, fullSelector:"", context:obj};
         return function (sel, newValue) {
-            return select(nnContext, {currentDepth:0, previousDepth:-1, fullSelector:"", context:obj}, sel, obj, newValue);
+            return select( previousSelectContext, sel, obj, newValue);
         }
     }
 
@@ -161,3 +176,17 @@
     module.exports = nn;
     //
 })();
+
+
+//not as fast as ternary
+//var formattedSelector;
+//if(previousSelectContext.previousDepth > -1){
+//    if(selectorType === numberType){
+//        formattedSelector = openArray + selector + closeArray;
+//    }else{
+//        formattedSelector = splitter + selector;
+//    }
+//}else{
+//    formattedSelector = selector;
+//}
+//selectContext.fullSelector = previousSelectContext.fullSelector + formattedSelector;
