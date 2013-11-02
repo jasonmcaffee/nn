@@ -31,7 +31,7 @@
     //Performance Considerations
     //  inline work is slightly faster than a function call
     //http://jsperf.com/inline-work-vs-call-function
-    //  if statements are faster than ternary
+    //  if statements are faster than ternary  (not the case for fullSelector construction)
     //http://jsperf.com/ternary-vs-switch/8
     //  closures pretty fast
     //http://jsperf.com/closure-vs-bind-vs-instance
@@ -93,7 +93,6 @@
                     selector)
         };
 
-        //selectContext.previousDepth = selectContext.currentDepth;
         var dotSplitLength = dotSplit ? dotSplit.length : 0;
 
         //iterate over each property and traverse contexts
@@ -122,6 +121,7 @@
         };
         result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
+
         //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
         //passing it the arguments and the context of the real function's parent.
         result.func = function () {
@@ -130,16 +130,20 @@
             return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;
         };
 
-        //Todo: this impacts performance a bit. maybe provide it with .arr() is used? nope. that should be an array...
-        //allow iteration over arrays.
-        result.each = function(callback){
-            if(!context || !context.length){ //arrays and strings only ??   todo: better array checking. Object.prototype.toString(arr) == 'object array'
-                 return result;// allow chaining to continue?
-            }
-            for(var j =0; j < context.length; ++j){
-                callback(j, context[j], nn(context[j]));
-            }
-        };
+
+        //allow iteration over arrays. if the context is not an array, make each an empty function (big performance improvement 200,000 ops per second)
+        if(Object.prototype.toString.call(context) != '[object Array]'){
+            result.each = emptyFunction;
+        }else{
+            result.each = function(callback){
+                if(!context || !context.length){ //arrays and strings only ??   todo: better array checking. Object.prototype.toString(arr) == 'object array'
+                    return;// result;// allow chaining to continue?    NOTE: referencing result in this function impacts performance. (loss of 100,000 ops per second)
+                }
+                for(var j =0; j < context.length; ++j){
+                    callback(j, context[j], nn(context[j]));
+                }
+            };
+        }
 
         //TODO: num() str() arr() obj() to safely get the value
         //get the result as a string if it is a string.
