@@ -29,6 +29,10 @@
     'use strict';
 
     //Performance Considerations
+    //Always use a function to create a closure!  If not, your inline closure will include everything in parent function's scope,
+    //and suck up all your memory, leaving your code slow because of all the garbage collection.
+    //see result = createResultClosureFunc, result.func = createFuncClosure, etc.
+
     //  inline work is slightly faster than a function call
     //http://jsperf.com/inline-work-vs-call-function
     //  if statements are faster than ternary  (not the case for fullSelector construction)
@@ -121,35 +125,13 @@
         //console.info('fullSelector: ' + selectContext.fullSelector + ' prev depth: ' + selectContext.previousDepth + ' current depth: ' + selectContext.currentDepth);
 
         //closure bound to the last context
-        function result(s, newValue) {
-            return select(selectContext, s, context, newValue);
-        }
+        var result = createTheResultClosure(selectContext, context);//selectContext
         //result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
 
-        //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
-        //passing it the arguments and the context of the real function's parent.
-        result.func = function () {
-            var potentialFunc = previousContext && previousContext[propertyName] ? previousContext[propertyName] : undefined;
-            var isFunc = typeof potentialFunc === functionType;
-            return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;
-        };
+        result.func = createTheFuncClosure(previousContext, propertyName);
 
-        //TODO: could there be a bug if the object.prop was set outside of nn? probably, since our cached ref wouldnt be correct... maybe not a bug, just something to be aware of.
-        //maybe each should be a function of nn rather than of select.
-        //allow iteration over arrays. if the context is not an array, make each an empty function (big performance improvement 200,000 ops per second)
-        if(Object.prototype.toString.call(context) != '[object Array]'){
-            result.each = emptyFunction;
-        }else{
-            result.each = function(callback){
-                if(!context || !context.length){ //arrays and strings only ??   todo: better array checking. Object.prototype.toString(arr) == 'object array'
-                    return;// result;// allow chaining to continue?    NOTE: referencing result in this function impacts performance. (loss of 100,000 ops per second)
-                }
-                for(var j =0; j < context.length; ++j){
-                    callback(j, context[j], nn(context[j]));
-                }
-            };
-        }
+        result.each = createTheEachClosure(context);
 
         //TODO: num() str() arr() obj() to safely get the value
         //get the result as a string if it is a string.
@@ -166,6 +148,44 @@
         //TODO: parent() ? or up()?
 
         return result;
+    }
+
+    function createTheResultClosure(selectContext, context){
+        return function result(s, newValue) {
+            return select(selectContext, s, context, newValue);
+            //return select(null, s, context, newValue);
+        };
+    }
+    /**
+     * Huge performance increase by moving the closure creation into a separate function!
+     * @param context
+     * @returns {Function}
+     */
+    function createTheEachClosure(context){
+        return function each(callback){
+            if(!context || !context.length){ //arrays and strings only ??   todo: better array checking. Object.prototype.toString(arr) == 'object array'
+                    return;// result;// allow chaining to continue?    NOTE: referencing result in this function impacts performance. (loss of 100,000 ops per second)
+                }
+                for(var j =0; j < context.length; ++j){
+                    callback(j, context[j], nn(context[j]));
+                }
+        };
+    }
+
+    /**
+     * to allow functions to be executed safely, we provide the function which will call the real function if it exists,
+     * passing it the arguments and the context of the real function's parent.
+     * WOW HUGE PERFORMANCE SAVINGS moving this to a separate function.
+     * @param previousContext
+     * @param propertyName
+     * @returns {Function}
+     */
+    function createTheFuncClosure(previousContext, propertyName){
+        return function func() {
+            var potentialFunc = previousContext && previousContext[propertyName] ? previousContext[propertyName] : undefined;
+            var isFunc = typeof potentialFunc === functionType;
+            return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;
+        };
     }
 
     /**

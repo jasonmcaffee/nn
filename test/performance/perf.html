@@ -34,6 +34,7 @@
             <h2>Queries - dot notation vs nn</h2>
             <button id="runQueryTestButton">Run Query Test</button>
             <button id="runnnQueryTestButton">Run nn Query Test (for profiles)</button>
+            <button id="runcachednnQueryTestButton">Run cached nn Query Test (for profiles)</button>
             <table class="query-results">
                 <tr>
                     <td>Query Type</td><td>Total Time</td><td>Single Execution in Micro Seconds</td><td>Notes</td>
@@ -113,6 +114,13 @@
                 var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
                 $nnQueryTime.html(nn);
                 $('#nnSingleExecution').html(nnSingleExecutionInMicroSeconds);
+            });
+
+            $('#runcachednnQueryTestButton').on('click', function(){
+                var nnCached = timeCachedNNobjQuery();
+                var nnCacheSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nnCached);
+                $('#nnCachedQueryTime').html(nnCached);
+                $('#nnCachedSingleExecution').html(nnCacheSingleExecutionInMicroSeconds);
             });
 
             $('#runjQueryTestButton').on('click', function(){
@@ -266,6 +274,8 @@
                 return this.prop1;
             }
         };
+        //make it big for performance evaluation
+        obj.bigString=new Array(1000).join(new Array(2000).join("XXXXX"));
 
         demoOneObj = {
             people: [
