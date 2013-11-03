@@ -1,0 +1,235 @@
+<html>
+    <head>
+        <script src="../../dist/nn-0.0.4.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+        <style>
+            .query-results{
+                width: 50%;
+                background-color: ghostwhite;
+                border-color: darkgrey;
+                border-width: 1px;
+                border-style: solid;
+            }
+            .query-results tr{
+
+            }
+            .query-results tr td{
+
+            }
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <h2>Queries - dot notation vs nn</h2>
+            <button id="runQueryTestButton">Run Query Test</button>
+            <table class="query-results">
+                <tr>
+                    <td>Query Type</td><td>Total Time</td><td>Single Execution in Micro Seconds</td><td>Notes</td>
+                </tr>
+
+                <tr>
+                    <td>Normal</td><td id="normalQueryTime"></td><td id="normalSingleExecution"></td><td>notes</td>
+                </tr>
+
+                <tr>
+                    <td>nn</td><td id="nnQueryTime"></td><td id="nnSingleExecution"></td><td>notes</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div>
+            <h2>jquery vs document.getElementById</h2>
+            <button id="runjQueryTestButton">Run Document Query Test</button>
+            <table class="query-results">
+                <tr>
+                    <td>Query Type</td><td>Total Time</td><td>Single Execution in Micro Seconds</td><td>Notes</td>
+                </tr>
+
+                <tr>
+                    <td>document.getElementById</td><td id="documentQueryTime"></td><td id="documentSingleExecution"></td><td>notes</td>
+                </tr>
+
+                <tr>
+                    <td>$('#selector')</td><td id="jQueryTime"></td><td id="jquerySingleExecution"></td><td>notes</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+    <script>
+        $(function(){
+            var $normalQueryTime = $('#normalQueryTime');
+            var $nnQueryTime = $('#nnQueryTime');
+
+            $('#runQueryTestButton').on('click', function(){
+                var result = timeQueries();
+                $normalQueryTime.html(result.normal);
+                $nnQueryTime.html(result.nn);
+
+                $('#normalSingleExecution').html(result.normalSingleExecutionInMicroSeconds);
+                $('#nnSingleExecution').html(result.nnSingleExecutionInMicroSeconds);
+            });
+
+            $('#runjQueryTestButton').on('click', function(){
+                var result = timeDocumentQueries();
+
+                $('#documentQueryTime').html(result.normal);
+                $('#jQueryTime').html(result.jq);
+                $('#documentSingleExecution').html(result.normalSingleExecutionInMicroSeconds);
+                $('#jquerySingleExecution').html(result.jqSingleExecutionInMicroSeconds);
+            });
+        });
+
+        //test helpers =================================================================================================
+        function timed(f) {
+            var start = new Date().getTime();
+            f();
+            var end = new Date().getTime();
+            var total = end - start;
+            //console.info('time was: ' + total + ' ms');
+            return total;
+        }
+
+        function loop(iterations, f){
+            for(var i=0; i < iterations; ++i){
+                f();
+            }
+        }
+        function timePerExecutionInMicroseconds(iterations, totalms){
+            var msTimePerExecution = totalms / iterations;
+            var microSecondsTimePerExecution = msTimePerExecution * 1000;
+            return microSecondsTimePerExecution;
+        }
+        //query times ==================================================================================================
+        var queryResult, queryIterations = 1000000;
+        function timeQueries(){
+            var normal = 1;//timeNormalQuery();
+            var nn = timeNnQuery();
+            var normalSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, normal);
+            var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
+            return {
+                normal: normal,
+                nn: nn,
+                normalSingleExecutionInMicroSeconds: normalSingleExecutionInMicroSeconds,
+                nnSingleExecutionInMicroSeconds: nnSingleExecutionInMicroSeconds
+            }
+        }
+        function timeNormalQuery(){
+            var normalQueryTime = timed(function(){
+                loop(queryIterations, normalQuery);
+            });
+            return normalQueryTime;
+        }
+        function timeNnQuery(){
+            var nnQueryTime = timed(function(){
+                loop(queryIterations, nnQuery);
+            });
+            return nnQueryTime;
+        }
+        function normalQuery() {
+            if (obj && obj.prop3 && obj.prop3.prop3_1) {
+                queryResult = obj.prop3.prop3_1.prop3_1_1;
+            }
+        }
+
+        function nnQuery() {
+            queryResult = nn(obj)('prop3.prop3_1.prop3_1_1').val;
+        }
+
+        //jquery times =================================================================================================
+        function timeDocumentQueries(){
+            var normal = timeNormalDocumentQuery();
+            var jq = timeJqueryQuery();
+            var normalSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, normal);
+            var jqSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, jq);
+            return {
+                normal: normal,
+                jq: jq,
+                normalSingleExecutionInMicroSeconds: normalSingleExecutionInMicroSeconds,
+                jqSingleExecutionInMicroSeconds: jqSingleExecutionInMicroSeconds
+            }
+        }
+        function timeNormalDocumentQuery(){
+            var normalQueryTime = timed(function(){
+                loop(queryIterations, normalDocumentQuery);
+            });
+            return normalQueryTime;
+        }
+        function timeJqueryQuery(){
+            var jQueryTime = timed(function(){
+                loop(queryIterations, jQueryQuery);
+            });
+            return jQueryTime;
+        }
+        function normalDocumentQuery() {
+            var s = document.getElementById('jQueryTime');
+        }
+
+        function jQueryQuery() {
+            var s = $('#jQueryTime');
+        }
+
+        //objects ======================================================================================================
+        var obj, demoOneObj;
+        obj = {
+            prop1: 'a',
+            prop2: {
+                prop2_1: 'b',
+                func2: function (param1, param2, param3) {
+                    return this.prop2_1 + param1 + param2 + param3;
+                },
+                prop2_2: 'b2',
+                prop2_3:{
+                    prop2_3_1: 'f',
+                    prop2_3_2: 'g'
+                }
+            },
+            prop3: {
+                prop3_1: {
+                    prop3_1_1: 'c'
+                }
+            },
+            prop4: [
+                'd',
+                1,
+                {
+                    prop4_2: {
+                        prop4_2_1: {
+                            prop4_2_1_1: 'e'
+                        }
+                    }
+                }
+            ],
+            undef: undefined,
+            nul: null,
+            func1: function () {
+                return this.prop1;
+            }
+        };
+
+        demoOneObj = {
+            people: [
+                //person 1
+                {
+                    name:  {
+                        first: 'jason',
+                        last: 'mcaffee'
+                    }
+                },
+                null,
+                undefined,
+                {},
+                "",
+                123,
+                {
+                    name:{
+                        first: 'nolast'
+                    }
+                },
+                function(){}
+            ]
+        };
+    </script>
+</html>

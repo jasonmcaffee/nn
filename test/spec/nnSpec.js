@@ -244,53 +244,53 @@ describe("nn", function () {
     });
 //Setting ==============================================================================================================
     //precursor to being able to set. not sure if fullSelector will be public. for now, consider it internal and do not use it.
-    it("should build a full selector and know depth in chain", function(){
-        //be careful
-        var nnObj = nn(obj);
-        var nnProp2 = nnObj('prop2');
-        var nnProp2selector = nnProp2._selectContext.fullSelector;
-        expect(nnProp2selector).toEqual('prop2');
-        expect(nnProp2._selectContext.currentDepth).toEqual(1);
-
-        var nnProp2_1 = nnProp2('prop2_1');
-        var nnProp2_1selector = nnProp2('prop2_1')._selectContext.fullSelector;
-        expect(nnProp2_1selector).toEqual('prop2.prop2_1');
-        expect(nnProp2_1._selectContext.currentDepth).toEqual(2);
-
-        var nnProp2_2= nnProp2('prop2_2');
-        var nnProp2_2selector = nnProp2('prop2_2')._selectContext.fullSelector;
-        expect(nnProp2_2selector).toEqual('prop2.prop2_2');
-        expect(nnProp2_2._selectContext.currentDepth).toEqual(2);
-
-        expect(nnObj('prop2')('prop2_1')._selectContext.fullSelector).toEqual('prop2.prop2_1');
-        expect(nnObj('prop2.prop2_2')._selectContext.fullSelector).toEqual('prop2.prop2_2');
-
-        var nnProp4 = nnObj('prop4');
-        var nnProp4selector = nnProp4._selectContext.fullSelector;
-        expect(nnProp4selector).toEqual('prop4');
-
-        var nnProp4index2 = nnObj('prop4')(2);
-        var nnProp4index2selector = nnProp4index2._selectContext.fullSelector;
-        expect(nnProp4index2selector).toEqual('prop4[2]');
-
-        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
-        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1')('prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
-        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
-        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
-
-        //test nulls
-        expect(nn(null)('1234')._selectContext.fullSelector).toEqual('1234');
-        expect(nn(undefined)('1234')._selectContext.fullSelector).toEqual('1234');
-        expect(nn(undefined)('1234')(null)._selectContext.fullSelector).toEqual('1234.null');
-
-        expect(nn(obj)(undefined)._selectContext.fullSelector).toEqual('undefined');
-        expect(nn(obj)(undefined)(null)._selectContext.fullSelector).toEqual('undefined.null');
-        expect(nn(obj)(undefined)(null)('prop1')._selectContext.fullSelector).toEqual('undefined.null.prop1');
-
-        //this cannot work
-        //nn(null)('prop1', 123);
-        //what to do when they set a property of a number? fail silently? e.g. 2.someProp
-    });
+//    it("should build a full selector and know depth in chain", function(){
+//        //be careful
+//        var nnObj = nn(obj);
+//        var nnProp2 = nnObj('prop2');
+//        var nnProp2selector = nnProp2._selectContext.fullSelector;
+//        expect(nnProp2selector).toEqual('prop2');
+//        expect(nnProp2._selectContext.currentDepth).toEqual(1);
+//
+//        var nnProp2_1 = nnProp2('prop2_1');
+//        var nnProp2_1selector = nnProp2('prop2_1')._selectContext.fullSelector;
+//        expect(nnProp2_1selector).toEqual('prop2.prop2_1');
+//        expect(nnProp2_1._selectContext.currentDepth).toEqual(2);
+//
+//        var nnProp2_2= nnProp2('prop2_2');
+//        var nnProp2_2selector = nnProp2('prop2_2')._selectContext.fullSelector;
+//        expect(nnProp2_2selector).toEqual('prop2.prop2_2');
+//        expect(nnProp2_2._selectContext.currentDepth).toEqual(2);
+//
+//        expect(nnObj('prop2')('prop2_1')._selectContext.fullSelector).toEqual('prop2.prop2_1');
+//        expect(nnObj('prop2.prop2_2')._selectContext.fullSelector).toEqual('prop2.prop2_2');
+//
+//        var nnProp4 = nnObj('prop4');
+//        var nnProp4selector = nnProp4._selectContext.fullSelector;
+//        expect(nnProp4selector).toEqual('prop4');
+//
+//        var nnProp4index2 = nnObj('prop4')(2);
+//        var nnProp4index2selector = nnProp4index2._selectContext.fullSelector;
+//        expect(nnProp4index2selector).toEqual('prop4[2]');
+//
+//        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
+//        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1')('prop4_2_1_1')._selectContext.fullSelector).toEqual('prop4[2].prop4_2.prop4_2_1.prop4_2_1_1');
+//        expect(nnObj('prop4')(2)('prop4_2')('prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
+//        expect(nnObj('prop4')(2)('prop4_2.prop4_2_1.prop4_2_1_1')._selectContext.currentDepth).toEqual(5);
+//
+//        //test nulls
+//        expect(nn(null)('1234')._selectContext.fullSelector).toEqual('1234');
+//        expect(nn(undefined)('1234')._selectContext.fullSelector).toEqual('1234');
+//        expect(nn(undefined)('1234')(null)._selectContext.fullSelector).toEqual('1234.null');
+//
+//        expect(nn(obj)(undefined)._selectContext.fullSelector).toEqual('undefined');
+//        expect(nn(obj)(undefined)(null)._selectContext.fullSelector).toEqual('undefined.null');
+//        expect(nn(obj)(undefined)(null)('prop1')._selectContext.fullSelector).toEqual('undefined.null.prop1');
+//
+//        //this cannot work
+//        //nn(null)('prop1', 123);
+//        //what to do when they set a property of a number? fail silently? e.g. 2.someProp
+//    });
 
     it('should allow object properties to be set', function(){
         var nnObj = nn(obj);

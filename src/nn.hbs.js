@@ -55,7 +55,12 @@
      */
     function set(previousSelectContext, selector, newValue){
         if(previousSelectContext && previousSelectContext.context){
-            previousSelectContext.context[selector] = newValue;
+            try{
+                previousSelectContext.context[selector] = newValue;
+            }catch(e){
+                return new Error("error setting selector: " + selector + " to value: " + newValue +
+                    "\n exception thrown: " + e);
+            }
         }
     }
     /**
@@ -81,16 +86,16 @@
 
         //create a context which can be bound to the next select depth.
         var selectContext = {
-            previousDepth:previousSelectContext.currentDepth, //the context of the previous select function (the parent object)
-            currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
-
-            //fullSelector represents a string of selectors that have come before this function was called. e.g. nn(obj)('prop1') == 'prop1'   nn(obj)('prop1')('prop1_1') == 'prop1.prop1_1'
-            fullSelector:previousSelectContext.fullSelector +
-                (previousSelectContext.previousDepth > -1 ?
-                    selectorType === numberType ?
-                        openArray + selector + closeArray :
-                        splitter + selector :
-                    selector)
+//            previousDepth:previousSelectContext.currentDepth, //the context of the previous select function (the parent object)
+//            currentDepth: 1, //how far down the object tree we are. e.g. obj == 0  obj.prop1 ==  1  obj.prop1.prop1_2 == 2
+//
+//            //fullSelector represents a string of selectors that have come before this function was called. e.g. nn(obj)('prop1') == 'prop1'   nn(obj)('prop1')('prop1_1') == 'prop1.prop1_1'
+//            fullSelector:previousSelectContext.fullSelector +
+//                (previousSelectContext.previousDepth > -1 ?
+//                    selectorType === numberType ?
+//                        openArray + selector + closeArray :
+//                        splitter + selector :
+//                    selector)
         };
 
         var dotSplitLength = dotSplit ? dotSplit.length : 0;
@@ -112,14 +117,14 @@
         selectContext.context = context;
 
         //update depth
-        selectContext.currentDepth = dotSplitLength + selectContext.previousDepth;
+        //selectContext.currentDepth = dotSplitLength + selectContext.previousDepth;
         //console.info('fullSelector: ' + selectContext.fullSelector + ' prev depth: ' + selectContext.previousDepth + ' current depth: ' + selectContext.currentDepth);
 
         //closure bound to the last context
         function result(s, newValue) {
             return select(selectContext, s, context, newValue);
-        };
-        result._selectContext = selectContext;//exposing for unit testing.
+        }
+        //result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
 
         //to allow functions to be executed safely, we provide the function which will call the real function if it exists,
@@ -183,17 +188,3 @@
     window.nn = nn;
     //{{/if}}
 })();
-
-
-//not as fast as ternary
-//var formattedSelector;
-//if(previousSelectContext.previousDepth > -1){
-//    if(selectorType === numberType){
-//        formattedSelector = openArray + selector + closeArray;
-//    }else{
-//        formattedSelector = splitter + selector;
-//    }
-//}else{
-//    formattedSelector = selector;
-//}
-//selectContext.fullSelector = previousSelectContext.fullSelector + formattedSelector;
