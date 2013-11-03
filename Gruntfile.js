@@ -44,8 +44,11 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
+                //http://lisperator.net/uglifyjs/compress
                 compress:{
-                    conditionals:false
+                    conditionals:false,
+                    loops:false,
+                    comparisons: false
                 },
 
                 report: 'gzip'
