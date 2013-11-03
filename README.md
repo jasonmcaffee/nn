@@ -8,7 +8,7 @@ i.e. You can avoid exceptions like "TypeError: Cannot read property '{propertyNa
 ##Try it out!
 You can use this fiddle to try nevernull:
 
-http://jsfiddle.net/jasonmcaffee/mw7ky/7/
+http://jsfiddle.net/jasonmcaffee/mw7ky/9/
 
 ## Installation
 
