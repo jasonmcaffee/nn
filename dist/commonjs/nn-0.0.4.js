@@ -181,7 +181,7 @@
         }
     }
 
-    nn.version = "0.0.4";//0.0.4;
+    nn.version = "0.0.5";//0.0.4;
     //assign nn to the global scope.
     //
     module.exports = nn;
