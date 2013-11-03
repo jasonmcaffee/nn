@@ -24,6 +24,7 @@
         <div>
             <h2>Queries - dot notation vs nn</h2>
             <button id="runQueryTestButton">Run Query Test</button>
+            <button id="runnnQueryTestButton">Run nn Query Test (for profiles)</button>
             <table class="query-results">
                 <tr>
                     <td>Query Type</td><td>Total Time</td><td>Single Execution in Micro Seconds</td><td>Notes</td>
@@ -72,6 +73,13 @@
                 $('#nnSingleExecution').html(result.nnSingleExecutionInMicroSeconds);
             });
 
+            $('#runnnQueryTestButton').on('click', function(){
+                var nn = timeNnQuery();
+                var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
+                $nnQueryTime.html(nn);
+                $('#nnSingleExecution').html(nnSingleExecutionInMicroSeconds);
+            });
+
             $('#runjQueryTestButton').on('click', function(){
                 var result = timeDocumentQueries();
 
@@ -105,7 +113,7 @@
         //query times ==================================================================================================
         var queryResult, queryIterations = 1000000;
         function timeQueries(){
-            var normal = 1;//timeNormalQuery();
+            var normal = timeNormalQuery();
             var nn = timeNnQuery();
             var normalSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, normal);
             var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
