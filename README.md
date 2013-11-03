@@ -8,12 +8,12 @@ i.e. You can avoid exceptions like "TypeError: Cannot read property '{propertyNa
 ##Try it out!
 You can use this fiddle to try nevernull:
 
-http://jsfiddle.net/jasonmcaffee/mw7ky/3/
+http://jsfiddle.net/jasonmcaffee/mw7ky/7/
 
 ## Installation
 
 ### Browser
-Minified 0.0.3 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.3.min.js
+Minified 0.0.4 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.4.min.js
 
 ### NPM
 #### Install
@@ -28,6 +28,39 @@ var nn = require('nevernull');
 nn(obj)('prop1').val; // 'a'
 ```
 ##Usage
+
+###Compare normal dot notation to nn
+#### Normal
+When dealing with an array of people, we must ensure that a property exists before accessing it's sub properties.
+
+This can lead to rather verbose code, which often times can be incorrect and lead to bugs/defects.
+```javascript
+//normal usage
+var normalUsageResult = [], fullName;
+if(demoOneObj && demoOneObj.people){
+    for(var i = 0; i < demoOneObj.people.length; ++i){
+        var person = demoOneObj.people[i];
+        if(person && person.name){ //true story: i missed a check here for person and blew up when i started adding more test cases.
+            fullName = person.name.first + " " + person.name.last;
+            normalUsageResult.push(fullName);
+        }
+    }
+}
+
+```
+#### nn
+With Never Null, you don't need the verbosity, and you can rest assured that you won't encounter bugs related to null/undefined property access.
+```javascript
+var nnUsageResult1 = [], fullName;
+nn(demoOneObj)('people').each(function(x, person, nnPerson){
+    if(nnPerson('name').val){
+        fullName = nnPerson('name.first').val + " " + nnPerson('name.last').val;
+        nnUsageResult1.push(fullName);
+    }
+});
+```
+
+
 Take a look at the spec for all usages:
 https://github.com/jasonmcaffee/nn/blob/master/test/spec/nnSpec.js
 
@@ -128,12 +161,35 @@ It has been tested on:
 
 
 ##Performance
-http://jsperf.com/never-null/5
+Never Null strives to be performant as possible across all major browsers.
+
+Naturally, there is a performance cost when calling functions, closures, etc compared to using native dot notation.
+
+We feel the safety and convenience Never Null provides outweighs the impact to performance, which is sub milliseconds (microseconds) in most situations.
+
+http://jsperf.com/never-null/10
+
+## Thoroughly Tested
+Never Null is written using Test Driven Development, and is thoroughly tested using Jasmine.
+
+Take a look at the specs!
+
+https://github.com/jasonmcaffee/nn/blob/master/test/spec/nnSpec.js
 
 ##Size
-Original: 2505 bytes.
-Minified: 429 bytes.
-Gzipped:  131 bytes.
+Original: 8619 bytes.
+Minified: 948 bytes.
+Gzipped:  255 bytes.
+
+##License
+The MIT License (MIT)
+Copyright (c) 2014 Jason McAffee
+
+##Release Notes
+### version 0.0.4
+#### Set capabilities added. Set with ensure object chain soon to come.
+#### Each function added for convenience in iterating over arrays.
+#### Full selector (private) added. May become public.
 
 ##Future API Enhancements
 

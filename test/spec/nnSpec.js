@@ -74,7 +74,6 @@ describe("nn", function () {
     }
 
     it("should demonstrate normal safe navigation compared to nn safe navigation", function(){
-
         //normal usage
         var normalUsageResult = [], fullName;
         if(demoOneObj && demoOneObj.people){
