@@ -48,7 +48,9 @@ module.exports = function (grunt) {
                 compress:{
                     conditionals:false,
                     loops:false,
-                    comparisons: false
+                    comparisons: false,
+                    booleans: false,
+                    if_return: false
                 },
 
                 report: 'gzip'
