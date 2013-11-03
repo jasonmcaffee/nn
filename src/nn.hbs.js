@@ -130,7 +130,8 @@
             return isFunc ? potentialFunc.apply(previousContext, arguments) : undefined;
         };
 
-
+        //TODO: could there be a bug if the object.prop was set outside of nn? probably, since our cached ref wouldnt be correct... maybe not a bug, just something to be aware of.
+        //maybe each should be a function of nn rather than of select.
         //allow iteration over arrays. if the context is not an array, make each an empty function (big performance improvement 200,000 ops per second)
         if(Object.prototype.toString.call(context) != '[object Array]'){
             result.each = emptyFunction;
