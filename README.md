@@ -137,7 +137,7 @@ var undef = nn(obj)('prop4')(999).val; // undefined
 
 var undef = nn(obj)('prop4')(undefined).val;
 ```
-### Cached object querying
+### Cached object and property querying
 ```javascript
 var nnObj = nn(obj);
 
@@ -147,8 +147,25 @@ var nnProp1 = nnObj('prop2');
 var prop2_1 = nnProp1('prop2_1').val; // 'b'
 ```
 
+### Mutator (set)
+```javascript
+ var nnObj = nn(obj);
+nnObj('prop1', 123).val; //123
+
+//objects
+nnObj('newProp1', {}).val; // {}
+obj.newProp1; // {}
+
+nnObj('newProp1', {})('newProp1_1', 123).val; //123
+obj.newProp1.newProp1_1; //123
+
+nnObj('newProp3',{ prop3_1:'a'})('prop3_2', 'b').val; // 'b'
+obj.newProp3.prop3_1; // 'a'
+obj.newProp3.prop3_2; // 'b'
+```
+
 ###Compatability
-nevernull is written in vanilla javascript, and should work in all browsers.
+Never Null is written in vanilla javascript, and should work in all browsers.
 
 It has been tested on:
 * IE 8, 9, 10
@@ -178,11 +195,14 @@ https://github.com/jasonmcaffee/nn/blob/master/test/spec/nnSpec.js
 
 ##Size
 Original: 8619 bytes.
+
 Minified: 948 bytes.
+
 Gzipped:  255 bytes.
 
 ##License
 The MIT License (MIT)
+
 Copyright (c) 2014 Jason McAffee
 
 ##Release Notes
@@ -195,14 +215,19 @@ Copyright (c) 2014 Jason McAffee
 
 ### nn Core
 
-#### Query arrays using single string selector
+#### Safe Values
+```javascript
+nn(obj)(undefined).num(); //0
+
+nn(obj)('nonExistingProp').str(); // ""
+
+nn(obj)('nonExistingProp').arr(); // []
+
+```
+
+#### Query arrays using single string selector (maybe)
 ```javascript
 nn(obj)('prop4[0]').val; // 'd'
-```
-#### Mutator
-Allow setting of props.
-```javasript
-nn(obj)('prop1', 1234);
 ```
 
 #### Whenable
