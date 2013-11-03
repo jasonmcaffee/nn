@@ -1,6 +1,6 @@
 <html>
     <head>
-        <script src="../../dist/nn-0.0.4.min.js"></script>
+        <!--<script src="../../dist/nn-0.0.4.min.js"></script>-->
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
         <style>
@@ -21,6 +21,14 @@
     </head>
 
     <body>
+        <div>
+            <h2>Select nn Version</h2>
+            <select id="nnVersion">
+                <option value="0.0.4">0.0.4</option>
+                <option value="0.0.5">0.0.5</option>
+            </select>
+            <button id="loadNNButton">Load</button>
+        </div>
         <div>
             <h2>Queries - dot notation vs nn</h2>
             <button id="runQueryTestButton">Run Query Test</button>
@@ -61,6 +69,26 @@
     </body>
     <script>
         $(function(){
+
+            $('#loadNNButton').on('click', function(e){
+                var baseUrl = "../../dist/nn-";
+                var selectedVersion = $('#nnVersion').val();
+                $.ajaxPrefilter( "json script", function( options ) {
+                    options.crossDomain = true;
+                });
+                var url = baseUrl + selectedVersion + ".min.js";
+                $.getScript( url, function( data, textStatus, jqxhr ) {
+                    console.log( data ); // Data returned
+                    console.log( textStatus ); // Success
+                    console.log( jqxhr.status ); // 200
+                    console.log( "Load was performed." );
+                    alert('nn version loaded: ' + nn.version);
+                });
+//                setTimeout(function(){
+//                    alert('nn version loaded: ' + nn.version);
+//                }, 500);
+            });
+
             var $normalQueryTime = $('#normalQueryTime');
             var $nnQueryTime = $('#nnQueryTime');
 

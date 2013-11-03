@@ -1,5 +1,5 @@
 /**
- * Never Null version 0.0.4
+ * Never Null version 0.0.5
  *
  * 
  *
@@ -181,7 +181,7 @@
         }
     }
 
-    nn.version = "0.0.4";//0.0.4;
+    nn.version = "0.0.5";//0.0.5;
     //assign nn to the global scope.
     //
     module.exports = nn;

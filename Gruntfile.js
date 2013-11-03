@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     //modules
     var handlebars = require('handlebars');
 
-    var buildVersion = "0.0.4",
+    var buildVersion = "0.0.5",
         minFileName = "nn-" + buildVersion + ".min.js",
         nnCoreCommonJsFileName = "nn-" + buildVersion + ".js",
         nnCoreCommonJsDistFilePath = 'dist/commonjs/' + nnCoreCommonJsFileName,

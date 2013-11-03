@@ -326,6 +326,11 @@ describe("nn", function () {
         expect(obj.aNumber).toEqual(1);
     });
 
+    it("should supply a version", function(){
+        //quick test. needs refined //0.0.4
+        expect(nn.version.length).toEqual(5);
+    });
+
 //Speed Benchmark (just a rough guideline. doesnt always pass.) ========================================================
     //this does not accurately reflect browser performance, and is relative to my machine. you can probably ignore this...
 //    it("should be relatively fast", function () {
