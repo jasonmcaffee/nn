@@ -13,7 +13,7 @@ http://jsfiddle.net/jasonmcaffee/mw7ky/7/
 ## Installation
 
 ### Browser
-Minified 0.0.4 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.4.min.js
+Minified 0.0.5 - https://raw.github.com/jasonmcaffee/nn/master/dist/nn-0.0.5.min.js
 
 ### NPM
 #### Install
@@ -183,10 +183,8 @@ Never Null strives to be performant as possible across all major browsers.
 Naturally, there is a performance cost when calling functions, closures, etc compared to using native dot notation.
 
 We feel the safety and convenience Never Null provides outweighs the impact to performance, which is sub milliseconds (microseconds) in most situations.
-http://jsperf.com/nn-query-0-0-4
+http://jsperf.com/nn-query-0-0-5
 
-old test.
-http://jsperf.com/never-null/10
 
 ## Thoroughly Tested
 Never Null is written using Test Driven Development, and is thoroughly tested using Jasmine.
@@ -208,6 +206,8 @@ The MIT License (MIT)
 Copyright (c) 2014 Jason McAffee
 
 ##Release Notes
+### version 0.0.5 Performance tune up
+#### Huge performance optimizations!!!!
 ### version 0.0.4
 #### Set capabilities added. Set with ensure object chain soon to come.
 #### Each function added for convenience in iterating over arrays.
