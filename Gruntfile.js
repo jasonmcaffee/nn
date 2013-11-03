@@ -44,6 +44,10 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
+                compress:{
+                    conditionals:false
+                },
+
                 report: 'gzip'
             },
             nnCore: {files: uglifyConfig}
