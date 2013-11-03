@@ -46,6 +46,10 @@
                 <tr>
                     <td>nn</td><td id="nnQueryTime"></td><td id="nnSingleExecution"></td><td>notes</td>
                 </tr>
+
+                <tr>
+                    <td>nn cached obj</td><td id="nnCachedQueryTime"></td><td id="nnCachedSingleExecution"></td><td>notes</td>
+                </tr>
             </table>
         </div>
 
@@ -99,6 +103,9 @@
 
                 $('#normalSingleExecution').html(result.normalSingleExecutionInMicroSeconds);
                 $('#nnSingleExecution').html(result.nnSingleExecutionInMicroSeconds);
+
+                $('#nnCachedQueryTime').html(result.nnCached);
+                $('#nnCachedSingleExecution').html(result.nnCachedSingleExecutionInMicroSeconds);
             });
 
             $('#runnnQueryTestButton').on('click', function(){
@@ -143,13 +150,17 @@
         function timeQueries(){
             var normal = timeNormalQuery();
             var nn = timeNnQuery();
+            var nnCached = timeCachedNNobjQuery();
             var normalSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, normal);
             var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
+            var cachedSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nnCached);
             return {
                 normal: normal,
                 nn: nn,
                 normalSingleExecutionInMicroSeconds: normalSingleExecutionInMicroSeconds,
-                nnSingleExecutionInMicroSeconds: nnSingleExecutionInMicroSeconds
+                nnSingleExecutionInMicroSeconds: nnSingleExecutionInMicroSeconds,
+                nnCached: nnCached,
+                nnCachedSingleExecutionInMicroSeconds: cachedSingleExecutionInMicroSeconds
             }
         }
         function timeNormalQuery(){
@@ -164,6 +175,13 @@
             });
             return nnQueryTime;
         }
+        function timeCachedNNobjQuery(){
+            nnObj = nn(obj);
+            var nnQueryTime = timed(function(){
+                loop(queryIterations, nnCachedQuery);
+            });
+            return nnQueryTime;
+        }
         function normalQuery() {
             if (obj && obj.prop3 && obj.prop3.prop3_1) {
                 queryResult = obj.prop3.prop3_1.prop3_1_1;
@@ -172,6 +190,10 @@
 
         function nnQuery() {
             queryResult = nn(obj)('prop3.prop3_1.prop3_1_1').val;
+        }
+        var nnObj;
+        function nnCachedQuery(){
+            queryResult = nnObj('prop3.prop3_1.prop3_1_1').val;
         }
 
         //jquery times =================================================================================================

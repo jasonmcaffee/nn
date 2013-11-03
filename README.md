@@ -183,7 +183,9 @@ Never Null strives to be performant as possible across all major browsers.
 Naturally, there is a performance cost when calling functions, closures, etc compared to using native dot notation.
 
 We feel the safety and convenience Never Null provides outweighs the impact to performance, which is sub milliseconds (microseconds) in most situations.
+http://jsperf.com/nn-query-0-0-4
 
+old test.
 http://jsperf.com/never-null/10
 
 ## Thoroughly Tested
