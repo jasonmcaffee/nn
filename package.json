@@ -1,7 +1,7 @@
 {
   "name": "nevernull",
   "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "homepage": "https://github.com/jasonmcaffee/nn",
   "author": {
     "name": "Jason McAffee",
@@ -30,5 +30,5 @@
     "handlebars": "1.0.12"
   },
   "dependencies": {},
-  "main": "dist/commonjs/nn-0.0.3.js"
+  "main": "dist/commonjs/nn-0.0.5.js"
 }
