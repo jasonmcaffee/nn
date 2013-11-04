@@ -201,7 +201,7 @@
         }
     }
 
-    nn.version = "0.0.5";//{{version}};
+    nn.version = "0.0.6";//{{version}};
     //assign nn to the global scope.
     //{{#if commonjs}}
     module.exports = nn;
