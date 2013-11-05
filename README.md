@@ -98,6 +98,13 @@ var obj = {
     }
 };
 ```
+
+### Fast Query
+When you only need to access a prop value, and don't need other frills such as chaining, you can use fast query (for optimal performance)
+```javascript
+var prop1 = nn(obj, 'prop1').val; //a
+```
+
 ### Query using dot notation format
 nevernull allows you to pass in a query in the dot notation format.
 ```javascript

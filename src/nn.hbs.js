@@ -207,6 +207,13 @@
 
     }
 
+    /**
+     * When you don't need chaining, use fastSelect.
+     *
+     * @param selector - prop1.prop1_1
+     * @param context - the object we should query.
+     * @returns {{val: *}}
+     */
     function fastSelect(selector, context){
         var selectorType = typeof selector,
             dotSplit,

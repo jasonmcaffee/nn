@@ -48,6 +48,7 @@
         <div>
             <h2>Queries - dot notation vs nn</h2>
             <button id="runQueryTestButton">Run Query Test</button>
+            <button id="runnnFastQueryTestButton">Run nn Fast Query Test (for profiles)</button>
             <button id="runnnQueryTestButton">Run nn Query Test (for profiles)</button>
             <button id="runcachednnQueryTestButton">Run cached nn Query Test (for profiles)</button>
             <table class="query-results">
@@ -58,7 +59,9 @@
                 <tr>
                     <td>Normal</td><td id="normalQueryTime"></td><td id="normalSingleExecution"></td><td>notes</td>
                 </tr>
-
+                <tr>
+                    <td>nn fast select</td><td id="nnFastQueryTime"></td><td id="nnFastSingleExecution"></td><td>notes</td>
+                </tr>
                 <tr>
                     <td>nn</td><td id="nnQueryTime"></td><td id="nnSingleExecution"></td><td>notes</td>
                 </tr>
@@ -127,8 +130,17 @@
 
                 $('#nnCachedQueryTime').html(result.nnCached);
                 $('#nnCachedSingleExecution').html(result.nnCachedSingleExecutionInMicroSeconds);
-            });
 
+                $('#nnFastQueryTime').html(result.nnFastSelect);
+                $('#nnFastSingleExecution').html(result.nnFastSelectSingleExecutionInMicroSeconds);
+
+            });
+            $('#runnnFastQueryTestButton').on('click', function(){
+                var nn = timeNnFastSelect();
+                var nnFastSelectSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
+                $('#nnFastQueryTime').html(nn);
+                $('#nnFastSingleExecution').html(nnFastSelectSingleExecutionInMicroSeconds);
+            });
             $('#runnnQueryTestButton').on('click', function(){
                 var nn = timeNnQuery();
                 var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
@@ -179,16 +191,20 @@
             var normal = timeNormalQuery();
             var nn = timeNnQuery();
             var nnCached = timeCachedNNobjQuery();
+            var nnFastSelect = timeNnFastSelect();
             var normalSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, normal);
             var nnSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nn);
             var cachedSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nnCached);
+            var nnFastSelectSingleExecutionInMicroSeconds = timePerExecutionInMicroseconds(queryIterations, nnFastSelect);
             return {
                 normal: normal,
                 nn: nn,
                 normalSingleExecutionInMicroSeconds: normalSingleExecutionInMicroSeconds,
                 nnSingleExecutionInMicroSeconds: nnSingleExecutionInMicroSeconds,
                 nnCached: nnCached,
-                nnCachedSingleExecutionInMicroSeconds: cachedSingleExecutionInMicroSeconds
+                nnCachedSingleExecutionInMicroSeconds: cachedSingleExecutionInMicroSeconds,
+                nnFastSelect: nnFastSelect,
+                nnFastSelectSingleExecutionInMicroSeconds: nnFastSelectSingleExecutionInMicroSeconds
             }
         }
         function timeNormalQuery(){
@@ -210,6 +226,12 @@
             });
             return nnQueryTime;
         }
+        function timeNnFastSelect(){
+            var nnQueryTime = timed(function(){
+                loop(queryIterations, nnFastSelectQuery);
+            });
+            return nnQueryTime;
+        }
         function normalQuery() {
             if (obj && obj.prop3 && obj.prop3.prop3_1) {
                 queryResult = obj.prop3.prop3_1.prop3_1_1;
@@ -222,6 +244,10 @@
         var nnObj;
         function nnCachedQuery(){
             queryResult = nnObj('prop3.prop3_1.prop3_1_1').val;
+        }
+
+        function nnFastSelectQuery(){
+            queryResult = nn(obj, 'prop3.prop3_1.prop3_1_1');
         }
 
         //jquery times =================================================================================================
