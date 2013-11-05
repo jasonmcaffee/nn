@@ -157,6 +157,14 @@ describe("nn", function () {
         expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
     });
 
+    it("should support fast selecting for situations where you dont need the fluff", function(){
+        var prop2_1 = nn(obj, 'prop2.prop2_1').val;
+        expect(prop2_1).toEqual(obj.prop2.prop2_1);
+
+        var prop3_1_1 = nn(obj, 'prop3.prop3_1.prop3_1_1').val;
+        expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
+    });
+
     it("should be able to access property values of object literals by using a mix of . notation selectors and chained function calls", function () {
         var prop3_1_1 = nn(obj)('prop3.prop3_1')('prop3_1_1').val;
         expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);

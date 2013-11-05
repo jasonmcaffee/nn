@@ -126,11 +126,14 @@
 
         //closure bound to the last context
         var result = createTheResultClosure(selectContext, context);//selectContext
+        //var result = emptyFunction.bind(context);
         //result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
 
+        //adding these two functions slows firefox down by 1 second
         result.func = createTheFuncClosure(previousContext, propertyName);
 
+        //result.each = empty function slows firefox down by a half second.
         result.each = createTheEachClosure(context);
 
         //TODO: num() str() arr() obj() to safely get the value
@@ -193,12 +196,46 @@
      * @param {object} obj - the query object.
      * @returns {function} - closure bound to the query object.
      */
-    function nn(obj) {
-        //create the context now as opposed to inside the returned closure. big perf increase.
-        var previousSelectContext = {currentDepth:0, previousDepth:-1, fullSelector:"", context:obj};
-        return function (sel, newValue) {
-            return select( previousSelectContext, sel, obj, newValue);
+    function nn(obj, fastSelector) {
+        if(fastSelector){
+            return fastSelect(fastSelector, obj);
+        }else{
+            //create the context now as opposed to inside the returned closure. big perf increase.
+            var previousSelectContext = {currentDepth:0, previousDepth:-1, fullSelector:"", context:obj};
+            return createTheResultClosure(previousSelectContext, obj);
         }
+
+    }
+
+    function fastSelect(selector, context){
+        var selectorType = typeof selector,
+            dotSplit,
+            propertyName,
+            previousContext;
+
+        //determine what to do based on the selector type.
+        if (selectorType === stringType) {
+            dotSplit = selector.split(splitter);
+        } else if (selectorType === numberType) {
+            dotSplit = [selector];
+        } else {
+            context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
+        }
+
+        var dotSplitLength = dotSplit ? dotSplit.length : 0;
+
+        //iterate over each property and traverse contexts
+        for (var i = 0; i < dotSplitLength; ++i){
+            propertyName = dotSplit[i];
+            previousContext = context;
+
+            if(context){
+                context = context[propertyName];
+            }
+        }
+        return {
+            val : context
+        };
     }
 
     nn.version = "0.0.6";//{{version}};

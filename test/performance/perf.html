@@ -30,6 +30,20 @@
             </select>
             <button id="loadNNButton">Load</button>
             <span id="loadMessage">Not loaded</span>
+            <br/>
+            <span>Iterations</span>
+            <select id="testIterations">
+                <option value="10" selected>10</option>
+                <option value="100" selected>100</option>
+                <option value="10000" selected>10,000</option>
+                <option value="50000" selected>50,000</option>
+                <option value="100000" selected>100,000</option>
+                <option value="500000" selected>500,000</option>
+                <option value="1000000" selected>1,000,000</option>
+                <option value="2000000">2,000,000</option>
+                <option value="5000000">5,000,000</option>
+                <option value="10000000">10,000,000</option>
+            </select>
         </div>
         <div>
             <h2>Queries - dot notation vs nn</h2>
@@ -75,8 +89,13 @@
         </div>
     </body>
     <script>
+        var queryIterations = 10;
         $(function(){
-
+            queryIterations = parseInt($('#testIterations').val());
+            $('#testIterations').on('change', function(){
+                queryIterations = parseInt($('#testIterations').val());
+                console.log('query iterations changed to: ' + queryIterations);
+            });
             $('#loadNNButton').on('click', function(e){
                 var baseUrl = "../../dist/nn-";
                 var selectedVersion = $('#nnVersion').val();
@@ -155,7 +174,7 @@
             return microSecondsTimePerExecution;
         }
         //query times ==================================================================================================
-        var queryResult, queryIterations = 1000000;
+        var queryResult;
         function timeQueries(){
             var normal = timeNormalQuery();
             var nn = timeNnQuery();
