@@ -14,7 +14,8 @@ describe("nn", function () {
                 prop2_2: 'b2',
                 prop2_3:{
                     prop2_3_1: 'f',
-                    prop2_3_2: 'g'
+                    prop2_3_2: 'g',
+                    prop2_3_3: 123
                 }
             },
             prop3: {
@@ -33,6 +34,7 @@ describe("nn", function () {
                     }
                 }
             ],
+            prop5: 123,
             undef: undefined,
             nul: null,
             func1: function () {
@@ -132,6 +134,68 @@ describe("nn", function () {
         }
     });
 
+    //fast select ######################################################################################################
+    it("should support fast selecting (non chaining, optimal performance)", function(){
+        var prop2_1 = nn(obj, 'prop2.prop2_1').val;
+        expect(prop2_1).toEqual(obj.prop2.prop2_1);
+
+        var prop3_1_1 = nn(obj, 'prop3.prop3_1.prop3_1_1').val;
+        expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
+
+        var undef = nn(obj, 'not.defined').val;
+        expect(undef).toEqual(undefined);
+
+        undef = nn(obj, undefined).val;
+        expect(undef).toEqual(undefined);
+
+        undef = nn(undefined, undefined).val;
+        expect(undef).toEqual(undefined);
+
+        undef = nn(null, null).val;
+        expect(undef).toEqual(undefined);
+    });
+
+    it("fast select should provide each", function(){
+        //nn usage
+        var nnUsageResult1 = [], fullName;
+        nn(demoOneObj, 'people').each(function(x, person, nnPerson){
+            if(nnPerson('name').val){
+                fullName = nnPerson('name.first').val + " " + nnPerson('name.last').val;
+                nnUsageResult1.push(fullName);
+            }
+        });
+
+        validateResult(nnUsageResult1);
+
+        function validateResult(result){
+            expect(result.length).toEqual(2);
+            expect(result[0]).toEqual("jason mcaffee");
+            expect(result[1]).toEqual("nolast undefined");
+        }
+    });
+
+    it("fast select should provide num", function(){
+        var result = nn(obj, 'prop5').num();
+        expect(result).toEqual(123);
+
+//        var nnResult = nn(obj, 'prop5');
+//        expect(nnResult.num()).toEqual(123);
+        //obj.prop5 = 435;     currently fails TODO: this
+        //expect(nnResult.num()).toEqual(435);
+    });
+
+    it("fast select should provide get", function(){
+        var nnProp2 = nn(obj, 'prop2');
+        var prop2_1 = nnProp2.get('prop2_1').val;
+        expect(prop2_1).toEqual(obj.prop2.prop2_1);
+
+        expect(nn(obj, 'prop2').get('prop2_3').get('prop2_3_1').val).toEqual(obj.prop2.prop2_3.prop2_3_1);
+        expect(nn(obj, 'prop2').get('prop2_3.prop2_3_1').val).toEqual(obj.prop2.prop2_3.prop2_3_1);
+        expect(nn(obj, 'prop2.prop2_3').get('prop2_3_1').val).toEqual(obj.prop2.prop2_3.prop2_3_1);
+    });
+
+    //chained select ###################################################################################################
+
     it("should be able to access property values of object literals by using chained function calls", function () {
         var prop1 = nn(obj)('prop1').val;
         expect(prop1).toEqual(obj.prop1);
@@ -154,14 +218,6 @@ describe("nn", function () {
         expect(prop2_1).toEqual(obj.prop2.prop2_1);
 
         var prop3_1_1 = nn(obj)('prop3.prop3_1.prop3_1_1').val;
-        expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
-    });
-
-    it("should support fast selecting for situations where you dont need the fluff", function(){
-        var prop2_1 = nn(obj, 'prop2.prop2_1').val;
-        expect(prop2_1).toEqual(obj.prop2.prop2_1);
-
-        var prop3_1_1 = nn(obj, 'prop3.prop3_1.prop3_1_1').val;
         expect(prop3_1_1).toEqual(obj.prop3.prop3_1.prop3_1_1);
     });
 

@@ -43,13 +43,20 @@
     //http://jsperf.com/triple-equals-vs-double-equals/9
     //  named functions are slightly faster than faster than unnamed functions
     //http://jsperf.com/named-vs-anonymous-functions/2
-
+    //  storing properties on a function object is significantly slower than storing them on a object literal (this is what slows down chaining)
+    //http://jsperf.com/function-object-vs-object-literal
     var numberType = typeof 0,
         stringType = typeof "",
         emptyFunction = function () {
         }, //needed for undefined function execution
         functionType = typeof emptyFunction,
         splitter = ".", openArray = '[', closeArray = ']';
+
+    /**
+     * Copies every key in obj2 into obj1.
+     * @param obj1
+     * @param obj2
+     */
 
     /**
      * Sets the context of the previousSelectContext
@@ -72,7 +79,7 @@
      * Recursive query select function generator.
      * @returns {function} - closure bound to the last context
      */
-    function select(previousSelectContext, selector, context, newValue) {
+    function chainedSelect(previousSelectContext, selector, context, newValue) {
         var selectorType = typeof selector,
             shouldSet = newValue,
             dotSplit,
@@ -125,7 +132,7 @@
         //console.info('fullSelector: ' + selectContext.fullSelector + ' prev depth: ' + selectContext.previousDepth + ' current depth: ' + selectContext.currentDepth);
 
         //closure bound to the last context
-        var result = createTheResultClosure(selectContext, context);//selectContext
+        var result = createTheChainedSelectResultClosure(selectContext, context);//selectContext
         //var result = emptyFunction.bind(context);
         //result._selectContext = selectContext;//exposing for unit testing.
         result.val = context; //allow access to the last value. this is not protected (it can be null or undefined)
@@ -135,6 +142,7 @@
 
         //result.each = empty function slows firefox down by a half second.
         result.each = createTheEachClosure(context);
+        //addNnApi(result, context, previousContext, propertyName, selector);
 
         //TODO: num() str() arr() obj() to safely get the value
         //get the result as a string if it is a string.
@@ -153,12 +161,19 @@
         return result;
     }
 
-    function createTheResultClosure(selectContext, context){
+    /**
+     * For chaining.
+     * @param selectContext
+     * @param context
+     * @returns {Function}
+     */
+    function createTheChainedSelectResultClosure(selectContext, context){
         return function result(s, newValue) {
-            return select(selectContext, s, context, newValue);
-            //return select(null, s, context, newValue);
+            return chainedSelect(selectContext, s, context, newValue);
         };
     }
+
+
     /**
      * Huge performance increase by moving the closure creation into a separate function!
      * @param context
@@ -167,14 +182,25 @@
     function createTheEachClosure(context){
         return function each(callback){
             if(!context || !context.length){ //arrays and strings only ??   todo: better array checking. Object.prototype.toString(arr) == 'object array'
-                    return;// result;// allow chaining to continue?    NOTE: referencing result in this function impacts performance. (loss of 100,000 ops per second)
-                }
-                for(var j =0; j < context.length; ++j){
-                    callback(j, context[j], nn(context[j]));
-                }
+                return;// result;// allow chaining to continue?    NOTE: referencing result in this function impacts performance. (loss of 100,000 ops per second)
+            }
+            for(var j =0; j < context.length; ++j){
+                callback(j, context[j], nn(context[j]));
+            }
         };
     }
 
+    function createTheNumClosure(previousContext, propertyName){
+        return function num(defaultVal){
+            return previousContext[propertyName];
+        };
+    }
+
+    function createTheStrClosure(previousContext, propertyName){
+        return function num(defaultVal){
+            return previousContext[propertyName];
+        };
+    }
     /**
      * to allow functions to be executed safely, we provide the function which will call the real function if it exists,
      * passing it the arguments and the context of the real function's parent.
@@ -198,15 +224,23 @@
      */
     function nn(obj, fastSelector) {
         if(fastSelector){
+            //return new FastSelect(fastSelector, obj);
             return fastSelect(fastSelector, obj);
         }else{
             //create the context now as opposed to inside the returned closure. big perf increase.
             var previousSelectContext = {currentDepth:0, previousDepth:-1, fullSelector:"", context:obj};
-            return createTheResultClosure(previousSelectContext, obj);
+            return createTheChainedSelectResultClosure(previousSelectContext, obj);
         }
 
     }
 
+    /**
+     * When you don't need chaining, use fastSelect.
+     *
+     * @param selector - prop1.prop1_1
+     * @param context - the object we should query.
+     * @returns object
+     */
     function fastSelect(selector, context){
         var selectorType = typeof selector,
             dotSplit,
@@ -233,14 +267,186 @@
                 context = context[propertyName];
             }
         }
+
+        //var result = {};
+        //addNnApi(result, context, previousContext, propertyName);
+        //var result = new NNApi(selector, context, previousContext, propertyName);
+        var result = nnApi2(selector, context, previousContext, propertyName);
+        return result;
+    }
+
+
+    var api ={
+        get: function(selector){
+            return fastSelect(selector, this.context);
+        },
+        each: function(callback){
+            for(var i = 0; i < this.context.length; ++i){
+                var item = this.context[i];
+                callback(i, item, nn(item));
+            }
+        },
+        num: function(defaultValue){
+            return this.context;
+        },
+        str: function(defaultValue){
+            return this.context;
+        },
+        func : function(){
+            var potentialFunc = this.previousContext && this.previousContext[this.propertyName] ? this.previousContext[this.propertyName] : undefined;
+            var isFunc = typeof potentialFunc === functionType;
+            return isFunc ? potentialFunc.apply(this.previousContext, arguments) : undefined;
+        }
+    };
+
+    function nnApi2(selector, context, previousContext, propertyName){
         return {
-            val : context
+            val: context,
+            context: context,
+            selector: selector,
+            previousContext: previousContext,
+            propertyName: propertyName,
+            each: api.each,
+            num: api.num,
+            str: api.str,
+            func: api.func,
+            get: api.get
         };
     }
 
+    //function createGetAsTypeClosure()
     nn.version = "0.0.6";//0.0.6;
     //assign nn to the global scope.
     //
     module.exports = nn;
     //
 })();
+
+//does not appear to be faster
+//function FastSelect(selector, context){
+//    //this.context = context;
+//    this.selector = selector;
+//    var selectorType = typeof selector,
+//        dotSplit,
+//        propertyName,
+//        previousContext;
+//
+//    //determine what to do based on the selector type.
+//    if (selectorType === stringType) {
+//        dotSplit = selector.split(splitter);
+//    } else if (selectorType === numberType) {
+//        dotSplit = [selector];
+//    } else {
+//        context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
+//    }
+//
+//    var dotSplitLength = dotSplit ? dotSplit.length : 0;
+//
+//    //iterate over each property and traverse contexts
+//    for (var i = 0; i < dotSplitLength; ++i){
+//        propertyName = dotSplit[i];
+//        previousContext = context;
+//
+//        if(context){
+//            context = context[propertyName];
+//        }
+//    }
+//    this.val = context;
+//}
+//
+//function _fastSelect(selector, context){
+//    var selectorType = typeof selector,
+//        dotSplit,
+//        propertyName,
+//        previousContext;
+//
+//    //determine what to do based on the selector type.
+//    if (selectorType === stringType) {
+//        dotSplit = selector.split(splitter);
+//    } else if (selectorType === numberType) {
+//        dotSplit = [selector];
+//    } else {
+//        context = null;//handle undefined selectors. e.g. nn(obj)(undefined)
+//    }
+//
+//    var dotSplitLength = dotSplit ? dotSplit.length : 0;
+//
+//    //iterate over each property and traverse contexts
+//    for (var i = 0; i < dotSplitLength; ++i){
+//        propertyName = dotSplit[i];
+//        previousContext = context;
+//
+//        if(context){
+//            context = context[propertyName];
+//        }
+//    }
+//    return context;
+//}
+
+//    FastSelect.prototype.each = function each(callback){
+//        if(!this.selector || !this.context || !this.context.length || !callback){
+//            return;
+//        }
+//        var contextLength = this.context.length;
+//        for(var j =0; j < contextLength; ++j){
+//            callback(j, this.context[j]);
+//        }
+//    }
+
+
+//slowed ff by 100% (double the time) NOT TRUE! adding a 5th property to the result caused this. or perhaps too many closures...
+//function createTheGetClosure(context){
+//    return function get(s){
+//        return fastSelect(s, context);
+//    }
+//}
+
+/**
+ function NNApi(selector, context, previousContext, propertyName){
+        this.val = this.context = context;
+        this.selector = selector;
+        this.previousContext = previousContext;
+        this.propertyName = propertyName;
+    }
+
+ var api;
+ NNApi.prototype = api ={
+        each: function(callback){
+            for(var i = 0; i < this.context.length; ++i){
+                var item = this.context[i];
+                callback(i, item, nn(item));
+            }
+        },
+        num: function(defaultValue){
+            return this.context;
+        },
+        str: function(defaultValue){
+            return this.context;
+        },
+        func : function(){
+            var potentialFunc = this.previousContext && this.previousContext[this.propertyName] ? this.previousContext[this.propertyName] : undefined;
+            var isFunc = typeof potentialFunc === functionType;
+            return isFunc ? potentialFunc.apply(this.previousContext, arguments) : undefined;
+        }
+    };
+
+
+ /**
+ * Adds the nn api to the passed in object (either an object from fastSelect or function from select chained)
+ * e.g. object.val, object.each, etc.
+ * @param addToObject - object or function to add the api to
+ * @param context - selector context/query object
+ * @param previousContext - previous context (for executing func)
+ * @param propertyName - last prop name (used to execute func via previousContext[propertyName]() )
+ *
+//function addNnApi(addToObject, context, previousContext, propertyName, selector){
+//        addToObject.val = context;
+//        addToObject.each = createTheEachClosure(context);
+//        addToObject.func = createTheFuncClosure(previousContext, propertyName);
+//        addToObject.num = createTheNumClosure(previousContext, propertyName);
+//        addToObject.str = createTheStrClosure(previousContext, propertyName);
+    //addToObject.get = createTheGetClosure(context);
+//    var nnApiObj = new NNApi(selector, context, previousContext, propertyName);
+    //copy(addToObject, nnApiObj);
+//}
+ */
