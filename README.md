@@ -30,6 +30,18 @@ nnPerson.name();            // == { first: 'jason'}
 nnPerson.name.first();      // == 'jason'
 nnPerson.name.last();       // == undefined
 nnPerson.employer.name();   // == undefined
+
+nn(person).address.city()   // == undefined
+```
+
+## Install
+### Node
+```
+npm install nevernull
+```
+
+```
+const nn = require('nevernull');
 ```
 
 ## Requirements
