@@ -1,7 +1,7 @@
 {
   "name": "nevernull",
   "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "homepage": "https://github.com/jasonmcaffee/nn",
   "author": {
@@ -9,15 +9,24 @@
     "email": "jasonlmcaffee@gmail.com",
     "url": "http://nevernull.org/"
   },
-  "keywords":[
-      "null pointer exception", "never null", "nn", "TypeError cannot access property", "TypeError cannot access property of undefined", "of undefined", "safe navigation", "query object"
+  "keywords": [
+    "null pointer exception",
+    "never null",
+    "nn",
+    "TypeError cannot access property",
+    "TypeError cannot access property of undefined",
+    "of undefined",
+    "safe navigation",
+    "query object"
   ],
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/jasonmcaffee/nn.git"
   },
-  "engines" : { "node" : ">=7.0.0" },
+  "engines": {
+    "node": ">=7.0.0"
+  },
   "scripts": {
     "codio:download-node": "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
     "codio:install-node": "sudo apt-get install -y nodejs",
