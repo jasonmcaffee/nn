@@ -35,7 +35,6 @@ describe("nevernull", ()=>{
     expect(testObject.d()).toEqual(mockObject.d);
     expect( testObject.e()() ).toEqual(mockObject.e());
     expect( testObject.f()() ).toEqual(mockObject.f());
-
   });
 
 });
