@@ -10,7 +10,7 @@
  * @param rawValue - object to be wrapped.
  * @returns {Proxy}
  */
-export let nn = (rawValue)=>{
+const nn = (rawValue)=>{
 
   //Each property accessed on a nevernull function-object will be this function.
   //e.g. nn({}).prop1 is a function, which when executed, returns the passed in rawValue.
@@ -43,3 +43,5 @@ export let nn = (rawValue)=>{
     }
   });
 };
+
+module.exports = nn;
