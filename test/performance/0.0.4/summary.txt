@@ -1,2 +1,0 @@
-basically there's a bunch of garbage collection events that take 2.4 to 8ms to complete.
-i imagine its something to do with the closure.
