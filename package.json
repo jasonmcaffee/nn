@@ -52,5 +52,5 @@
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "jasmine": "2.4.1"
   },
-  "main": "dist/nevernull.js"
+  "main": "lib/nevernull.js"
 }
