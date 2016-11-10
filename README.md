@@ -34,6 +34,8 @@ nnPerson.employer.name();   // == undefined
 nn(person).address.city()   // == undefined
 ```
 
+[See the test spec for more examples](https://github.com/jasonmcaffee/nn/blob/master/src/nevernull.spec.js)
+
 ## Install
 ### Node
 ```
