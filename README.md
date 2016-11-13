@@ -47,5 +47,5 @@ const nn = require('nevernull');
 ```
 
 ## Requirements
-### Node 7.0
-I plan on providing a browser and legacy node version soon, but for now node 7 is required.
+### Node >= 6.0 
+Node 7 provides native Proxy, but 6.x will use a polyfill to emulate Proxy.
