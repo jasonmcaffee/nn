@@ -71,8 +71,28 @@ describe("nevernull", ()=>{
 
     testObject().a = {b:'yet another string'};
     expect(testObject.a.b()).toEqual(mockObject.a.b);
+
   });
 
+  it("should behave as normal objects when working with detached sub properties", ()=>{
+    let person = {
+      name: {
+        first: 'jason'
+      }
+    };
 
+    let nnPerson = nn(person);
+    let nnName = nnPerson.name;
+
+    nnName().first = 'bill';
+    expect(nnName()).toEqual(person.name);
+
+    //when reassigning detached properties, values are no longer expected to be equal
+    let name = person.name;
+    person.name = { first: 'julie' };
+
+    expect(nnName()).toEqual(name);
+    expect(person.name).not.toEqual(nnName());
+  });
 
 });
