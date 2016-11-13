@@ -1,3 +1,4 @@
+let proxyPolyfill = require('../vendor/reflect');
 /**
  * Returns an object which allows for safe navigation of properties.
  * When raw property values are needed, simply execute the property as a function.
