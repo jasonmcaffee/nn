@@ -2,6 +2,7 @@
 Provides the ability to safely navigate an object tree, regardless if the object, its properties, or nested properties exist.
 
 ## Examples
+To easily try out nevernull, you can fork the codio project & box [here](https://codio.com/jasonmcaffee/nn/tree/README.md)
 
 ### No Uncaught ReferenceError or Uncaught TypeError Errors
 The function-object returned from nn guarantees safe navigation of its object tree.

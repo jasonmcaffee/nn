@@ -1,4 +1,4 @@
-const nn = require('./nevernull');
+const nn = require('./../build/nevernull');
 
 describe("nevernull", ()=>{
 
