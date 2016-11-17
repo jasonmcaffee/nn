@@ -55,6 +55,7 @@ Node 7 provides native Proxy, but 6.x will use a polyfill to emulate Proxy.
 
 ## Performance
 Performance is acceptable for most situations, but it should be noted that there is a performance penalty using nevernull over traditional safeguarded access.
+Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/master/test/performance/test.js)
 
 ### Node v6.0.0 Using Polyfill
 ### 200 Iterations
