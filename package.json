@@ -30,14 +30,14 @@
   "scripts": {
     "codio:download-node": "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
     "codio:install-node": "sudo apt-get install -y nodejs",
-    "initial-setup": "npm install jasmine -g && npm install babel-cli -g && npm install eslint -g && npm install && npm run build",
+    "initial-setup": "npm install jasmine -g && npm install babel-cli -g && npm install && npm run build",
     "initial-setup-for-codio": "npm run codio:download-node && npm run codio:install-node && npm run initial-setup",
     "test": "NODE_ENV=test-unit jasmine JASMINE_CONFIG_PATH=jasmine.json",
     "build-no-clean": "babel src --out-dir build --source-maps",
     "build-watch": "babel src --out-dir build --source-maps --watch",
     "clean": "rm -rf build",
     "build": "npm run clean && npm run build-no-clean",
-    "dist": "cp build/nevernull.js lib"
+    "dist": "cp build/nevernull.js lib && cp build/nevernull.js.map lib"
   },
   "bugs": {
     "url": "https://github.com/jasonmcaffee/nn/issues"
