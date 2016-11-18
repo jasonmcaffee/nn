@@ -45,7 +45,7 @@ const timeTraditionalSafeguardedAccess5LayersDeep = ()=>{
 
 const timeNevernullSafeguardedAccess5LayersDeep = ()=>{
     return timeThis(()=>{
-        let result = nn(example).a.b.c();
+        let result = nn(example).a.b.c.d.e();
     });
 };
 
