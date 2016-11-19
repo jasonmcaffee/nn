@@ -166,10 +166,12 @@ The node process running all the below tests never went about 30MB.
 #### Node 7.1 Native Proxy
 ##### 2,000 iterations
 ```
-"5 layers of nesting": {
+{
+  "5 layers of nesting": {
     "total KB memory used for traditional": 403.046875,
     "total KB memory used for nevernull": 423.15625
   }
+}
 ```
 ##### 20,000,000 iterations
 ```
