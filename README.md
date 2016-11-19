@@ -161,7 +161,7 @@ performance test of 200 iterations starting...
 ### Memory Usage
 There is no significant increase in memory utilization when using NeverNull over traditional safeguarded access.
 
-The node process running all the below tests never went about 30MB.
+The node process running all the below tests never went above 30MB.
 
 #### Node 7.1 Native Proxy
 ##### 2,000 iterations
