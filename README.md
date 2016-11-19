@@ -1,5 +1,5 @@
 # nevernull
-Provides the ability to safely navigate an object tree, regardless if the object, its properties, or nested properties exist.
+NeverNull provides the ability to safely navigate an object tree, regardless if the object, its properties, or nested properties exist.
 
 The browser version of nevernull can be found [here](https://github.com/jasonmcaffee/nevernull-browser)
 
@@ -48,6 +48,26 @@ npm install nevernull
 ```
 const nn = require('nevernull');
 ```
+
+## Existential Operator / Safe Navigation Operator
+Nevernull provides you with the same functionality the Existential Operator provides in various other languages (Ruby, Groovy, Dart, CoffeeScript, etc)
+
+e.g.
+```
+person?.name?.first; //safe navigation operator in groovy
+
+nn(person).name.first(); //nevernull usage in js
+```
+
+### Further Reading
+[Wikipedia - Save Navigation Operator](https://en.wikipedia.org/wiki/Safe_navigation_operator)
+[Groovy's Safe Navigation Operator](http://docs.groovy-lang.org/latest/html/documentation/index.html#_safe_navigation_operator)
+[CoffeeScript's Existential Operator](http://coffeescript.org/#operators)
+[Ruby's Safe Navigation Operator](https://github.com/ruby/ruby/blob/v2_3_0/NEWS)
+
+### ES Discussions
+[Existential Operator Null Propogation Operator](https://esdiscuss.org/topic/existential-operator-null-propagation-operator)
+[Existential Operator](https://esdiscuss.org/topic/the-existential-operator)
 
 ## Requirements
 ### Node >= 6.0 
