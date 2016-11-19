@@ -33,6 +33,7 @@
     "initial-setup": "npm install jasmine -g && npm install babel-cli -g && npm install && npm run build",
     "initial-setup-for-codio": "npm run codio:download-node && npm run codio:install-node && npm run initial-setup",
     "test": "NODE_ENV=test-unit jasmine JASMINE_CONFIG_PATH=jasmine.json",
+    "test:performance": "node --expose-gc test/performance/test.js",
     "build-no-clean": "babel src --out-dir build --source-maps",
     "build-watch": "babel src --out-dir build --source-maps --watch",
     "clean": "rm -rf build",

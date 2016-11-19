@@ -75,8 +75,17 @@ const timeTotal = (timeReturningFunction, iterations) =>{
 };
 
 const runPerfTests = (iterations) =>{
+    let traditional5layersDeepMemUsageStart = process.memoryUsage().heapUsed;
     let traditionalTimeInNano5LayersDeep =  timeTotal(timeTraditionalSafeguardedAccess5LayersDeep, iterations);
+    let traditional5layersDeepMemUsage = process.memoryUsage().heapUsed - traditional5layersDeepMemUsageStart;
+    gc();
+
+    let nevernull5LayersDeepMemUsageStart = process.memoryUsage().heapUsed;
     let nevernullTimeInNano5LayersDeep = timeTotal(timeNevernullSafeguardedAccess5LayersDeep, iterations);
+    let nevernull5LayersDeepMemUsage = process.memoryUsage().heapUsed - nevernull5LayersDeepMemUsageStart;
+    gc();
+
+    let percentageMoreMemoryUsedNevernull5LayersDeep = Math.floor(traditional5layersDeepMemUsage / nevernull5LayersDeepMemUsage * 100);
     let percentageFasterOfTraditional5LayersDeep = Math.floor(nevernullTimeInNano5LayersDeep / traditionalTimeInNano5LayersDeep * 100);
 
     let traditionalTimeInNano3LayersDeep = timeTotal(timeTraditionalSafeguardedAccess3LayersDeep, iterations);
@@ -116,7 +125,15 @@ const runPerfTests = (iterations) =>{
 
     };
 
+    let memoryUsage = {
+        "5 layers of nesting":{
+            "total KB memory used for traditional": traditional5layersDeepMemUsage / 1024,
+            "total KB memory used for nevernull": nevernull5LayersDeepMemUsage / 1024
+        }
+    };
+
     console.log(JSON.stringify(totalTimes, null, 2));
+    console.log(JSON.stringify(memoryUsage, null, 2));
 };
 
 runPerfTests(iterationsToRun);

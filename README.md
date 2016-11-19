@@ -81,8 +81,46 @@ Node 7 provides native Proxy, but 6.x will use a polyfill to emulate Proxy.
 Performance is acceptable for most situations, but it should be noted that there is a performance penalty using nevernull over traditional safeguarded access.
 Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/master/test/performance/test.js)
 
-### Node v6.0.0 Using Polyfill
-### 200 Iterations
+### Speed
+#### Node v7.1.0 Native Proxy
+##### 200 iterations
+```
+node ./test/performance/test.js 200
+performance test of 200 iterations starting...
+{
+  "nanoseconds": {
+    "3 layers of nesting": {
+      "total nano for traditional ": 44460,
+      "total nano for nevernull ": 262126
+    },
+    "5 layers of nesting": {
+      "total nano for traditional ": 240778,
+      "total nano for nevernull ": 605197
+    }
+  },
+  "milliseconds": {
+    "3 layers of nesting": {
+      "total ms for traditional ": 0.04446,
+      "total ms for nevernull ": 0.262126
+    },
+    "5 layers of nesting": {
+      "total ms for traditional ": 0.240778,
+      "total ms for nevernull ": 0.605197
+    }
+  },
+  "percentage": {
+    "3 layers of nesting": {
+      "traditional is faster by ": "589%"
+    },
+    "5 layers of nesting": {
+      "traditional is faster by ": "251%"
+    }
+  }
+}
+```
+
+#### Node v6.0.0 Using Polyfill
+##### 200 Iterations
 ```
 node ./test/performance/test.js 200
 performance test of 200 iterations starting...
@@ -118,39 +156,47 @@ performance test of 200 iterations starting...
 }
 ```
 
-### Node v7.1.0 Native Proxy
-#### 200 iterations
+
+
+### Memory Usage
+There is no significant increase in memory utilization when using NeverNull over traditional safeguarded access.
+
+The node process running all the below tests never went about 30MB.
+
+#### Node 7.1 Native Proxy
+##### 2,000 iterations
 ```
-node ./test/performance/test.js 200
-performance test of 200 iterations starting...
+"5 layers of nesting": {
+    "total KB memory used for traditional": 403.046875,
+    "total KB memory used for nevernull": 423.15625
+  }
+```
+##### 20,000,000 iterations
+```
 {
-  "nanoseconds": {
-    "3 layers of nesting": {
-      "total nano for traditional ": 44460,
-      "total nano for nevernull ": 262126
-    },
-    "5 layers of nesting": {
-      "total nano for traditional ": 240778,
-      "total nano for nevernull ": 605197
-    }
-  },
-  "milliseconds": {
-    "3 layers of nesting": {
-      "total ms for traditional ": 0.04446,
-      "total ms for nevernull ": 0.262126
-    },
-    "5 layers of nesting": {
-      "total ms for traditional ": 0.240778,
-      "total ms for nevernull ": 0.605197
-    }
-  },
-  "percentage": {
-    "3 layers of nesting": {
-      "traditional is faster by ": "589%"
-    },
-    "5 layers of nesting": {
-      "traditional is faster by ": "251%"
-    }
+  "5 layers of nesting": {
+    "total KB memory used for traditional": 1101.0859375,
+    "total KB memory used for nevernull": 802.609375
+  }
+}
+```
+
+#### Node v6.0.0 Using Polyfill
+##### 2,000 iterations
+```
+{
+  "5 layers of nesting": {
+    "total KB memory used for traditional": 597.546875,
+    "total KB memory used for nevernull": 515.8828125
+  }
+}
+```
+##### 20,000,000 iterations
+```
+{
+  "5 layers of nesting": {
+    "total KB memory used for traditional": 1566.1640625,
+    "total KB memory used for nevernull": 3224.9375
   }
 }
 ```
