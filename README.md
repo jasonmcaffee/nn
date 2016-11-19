@@ -61,12 +61,16 @@ nn(person).name.first(); //nevernull usage in js
 
 ### Further Reading
 [Wikipedia - Save Navigation Operator](https://en.wikipedia.org/wiki/Safe_navigation_operator)
+
 [Groovy's Safe Navigation Operator](http://docs.groovy-lang.org/latest/html/documentation/index.html#_safe_navigation_operator)
+
 [CoffeeScript's Existential Operator](http://coffeescript.org/#operators)
+
 [Ruby's Safe Navigation Operator](https://github.com/ruby/ruby/blob/v2_3_0/NEWS)
 
 ### ES Discussions
 [Existential Operator Null Propogation Operator](https://esdiscuss.org/topic/existential-operator-null-propagation-operator)
+
 [Existential Operator](https://esdiscuss.org/topic/the-existential-operator)
 
 ## Requirements
