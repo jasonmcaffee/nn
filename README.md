@@ -203,3 +203,7 @@ The node process running all the below tests never went above 30MB.
   }
 }
 ```
+
+## Release Notes
+### 1.2.0
+Thanks to [inlineblock](https://github.com/inlineblock) for their pull request to optimize performance by returning a cached nn(undefined) when the property value is undefined.
