@@ -73,7 +73,7 @@ The proposal for the Existential Operator is currently in Stage 0 draft status.
 
 [Stage 0 Draft - Optional Chaining - Spec Text](https://claudepache.github.io/es-optional-chaining/)
 
-[Stage 0 Draft - Optional Chaining - Github](https://claudepache.github.io/es-optional-chaining/)
+[Stage 0 Draft - Optional Chaining - Github](https://github.com/claudepache/es-optional-chaining)
 
 [Existential Operator Strawman](http://wiki.ecmascript.org/doku.php?id=strawman:existential_operator)
 
