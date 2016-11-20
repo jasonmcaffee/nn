@@ -95,4 +95,18 @@ describe("nevernull", ()=>{
     expect(person.name).not.toEqual(nnName());
   });
 
+  it("should not support assigning properties to nevernull function objects", ()=>{
+    let person = {
+      name: {
+        first: 'jason'
+      }
+    };
+
+    let nnPerson = nn(person);
+
+    nnPerson.name.dontDoThis = 123;
+    expect(nnPerson.name.dontDoThis).not.toEqual(123);
+    expect(typeof nnPerson.name.dontDoThis).toEqual('function');
+  });
+
 });
