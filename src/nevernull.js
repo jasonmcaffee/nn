@@ -26,11 +26,6 @@ const nn = (rawValue)=>{
 };
 
 /**
- * Cache the undefined version for speed.
- */
-const undefinedNn = nn(undefined);
-
-/**
  * Proxy handler object.  Any time a property is read, get is executed first, allowing us to ensure the property value
  * is never null/undefined.
  * @type {{get: handler.get}}
@@ -49,10 +44,13 @@ const handler = {
     let rawTarget = target();
     let rawPropertyValue = rawTarget ? rawTarget[name] : undefined;
 
-    //function properties should maintain their context.
+    //for performance: if the property value is undefined, there is no need to make a recursive call.
     if(rawPropertyValue === undefined){
-      return undefinedNn;
-    }else if(typeof rawPropertyValue === 'function'){
+      return nnUndefinedProperty;
+    }
+
+    //function properties should maintain their context.
+    if(typeof(rawPropertyValue) === 'function'){
       rawPropertyValue = rawPropertyValue.bind(rawTarget);
     }
 
@@ -60,5 +58,10 @@ const handler = {
     return nn(rawPropertyValue);
   }
 };
+
+/**
+ * Cache the undefined version for speed.
+ */
+const nnUndefinedProperty = nn(undefined);
 
 module.exports = nn;

@@ -85,35 +85,35 @@ Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/ma
 #### Node v7.1.0 Native Proxy
 ##### 200 iterations
 ```
-node ./test/performance/test.js 200
+node --expose-gc test/performance/test.js "200"
 performance test of 200 iterations starting...
 {
   "nanoseconds": {
     "3 layers of nesting": {
-      "total nano for traditional ": 44460,
-      "total nano for nevernull ": 262126
+      "total nano for traditional ": 42220,
+      "total nano for nevernull ": 192567
     },
     "5 layers of nesting": {
-      "total nano for traditional ": 240778,
-      "total nano for nevernull ": 605197
+      "total nano for traditional ": 227749,
+      "total nano for nevernull ": 481545
     }
   },
   "milliseconds": {
     "3 layers of nesting": {
-      "total ms for traditional ": 0.04446,
-      "total ms for nevernull ": 0.262126
+      "total ms for traditional ": 0.04222,
+      "total ms for nevernull ": 0.192567
     },
     "5 layers of nesting": {
-      "total ms for traditional ": 0.240778,
-      "total ms for nevernull ": 0.605197
+      "total ms for traditional ": 0.227749,
+      "total ms for nevernull ": 0.481545
     }
   },
   "percentage": {
     "3 layers of nesting": {
-      "traditional is faster by ": "589%"
+      "traditional is faster by ": "456%"
     },
     "5 layers of nesting": {
-      "traditional is faster by ": "251%"
+      "traditional is faster by ": "211%"
     }
   }
 }
@@ -122,35 +122,36 @@ performance test of 200 iterations starting...
 #### Node v6.0.0 Using Polyfill
 ##### 200 Iterations
 ```
-node ./test/performance/test.js 200
+node --expose-gc test/performance/test.js "200"
+
 performance test of 200 iterations starting...
 {
   "nanoseconds": {
     "3 layers of nesting": {
-      "total nano for traditional ": 40454,
-      "total nano for nevernull ": 350382
+      "total nano for traditional ": 43561,
+      "total nano for nevernull ": 207568
     },
     "5 layers of nesting": {
-      "total nano for traditional ": 279524,
-      "total nano for nevernull ": 666340
+      "total nano for traditional ": 278545,
+      "total nano for nevernull ": 519290
     }
   },
   "milliseconds": {
     "3 layers of nesting": {
-      "total ms for traditional ": 0.040454,
-      "total ms for nevernull ": 0.350382
+      "total ms for traditional ": 0.043561,
+      "total ms for nevernull ": 0.207568
     },
     "5 layers of nesting": {
-      "total ms for traditional ": 0.279524,
-      "total ms for nevernull ": 0.66634
+      "total ms for traditional ": 0.278545,
+      "total ms for nevernull ": 0.51929
     }
   },
   "percentage": {
     "3 layers of nesting": {
-      "traditional is faster by ": "866%"
+      "traditional is faster by ": "476%"
     },
     "5 layers of nesting": {
-      "traditional is faster by ": "238%"
+      "traditional is faster by ": "186%"
     }
   }
 }
@@ -168,8 +169,8 @@ The node process running all the below tests never went above 30MB.
 ```
 {
   "5 layers of nesting": {
-    "total KB memory used for traditional": 403.046875,
-    "total KB memory used for nevernull": 423.15625
+    "total KB memory used for traditional": 406.3671875,
+    "total KB memory used for nevernull": 798.9140625
   }
 }
 ```
@@ -177,8 +178,8 @@ The node process running all the below tests never went above 30MB.
 ```
 {
   "5 layers of nesting": {
-    "total KB memory used for traditional": 1101.0859375,
-    "total KB memory used for nevernull": 802.609375
+    "total KB memory used for traditional": 1095.6015625,
+    "total KB memory used for nevernull": 967.9609375
   }
 }
 ```
@@ -188,8 +189,8 @@ The node process running all the below tests never went above 30MB.
 ```
 {
   "5 layers of nesting": {
-    "total KB memory used for traditional": 597.546875,
-    "total KB memory used for nevernull": 515.8828125
+    "total KB memory used for traditional": 551.265625,
+    "total KB memory used for nevernull": 796.4609375
   }
 }
 ```
@@ -197,8 +198,8 @@ The node process running all the below tests never went above 30MB.
 ```
 {
   "5 layers of nesting": {
-    "total KB memory used for traditional": 1566.1640625,
-    "total KB memory used for nevernull": 3224.9375
+    "total KB memory used for traditional": 1571.828125,
+    "total KB memory used for nevernull": 1315.640625
   }
 }
 ```
