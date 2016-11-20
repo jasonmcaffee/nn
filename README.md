@@ -205,5 +205,15 @@ The node process running all the below tests never went above 30MB.
 ```
 
 ## Release Notes
+### 1.0.0
+Old API has been deprecated and is no longer supported.  String selectors no longer are needed.
+e.g.
+```
+//deprecated syntax
+nn(person)('name.first');
+nn(person)('name')('first');
+```
+Old API can be viewed and/or forked [here](https://github.com/jasonmcaffee/nn/tree/94408b7732ee4b2169198db830dba079423878aa)
+
 ### 1.2.0
 Thanks to [inlineblock](https://github.com/inlineblock) for their pull request to optimize performance by returning a cached nn(undefined) when the property value is undefined.
