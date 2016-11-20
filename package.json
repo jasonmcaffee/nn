@@ -1,7 +1,7 @@
 {
   "name": "nevernull",
   "description": "Safe navigation of objects (avoid null pointer exceptions / avoid TypeError cannot access property 'x' of undefined)",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "license": "MIT",
   "homepage": "https://github.com/jasonmcaffee/nn",
   "author": {
