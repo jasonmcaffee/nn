@@ -49,7 +49,7 @@ npm install nevernull
 const nn = require('nevernull');
 ```
 
-## Existential Operator / Safe Navigation Operator
+## Existential Operator / Safe Navigation Operator / Optional Chaining
 Nevernull provides you with the same functionality the Existential Operator provides in various other languages (Ruby, Groovy, Dart, CoffeeScript, etc)
 
 e.g.
@@ -68,7 +68,18 @@ nn(person).name.first(); //nevernull usage in js
 
 [Ruby's Safe Navigation Operator](https://github.com/ruby/ruby/blob/v2_3_0/NEWS)
 
+### tc39 Proposals
+The proposal for the Existential Operator is currently in Stage 0 draft status.
+
+[Stage 0 Draft - Optional Chaining - Spec Text](https://claudepache.github.io/es-optional-chaining/)
+
+[Stage 0 Draft - Optional Chaining - Github](https://claudepache.github.io/es-optional-chaining/)
+
+[Existential Operator Strawman](http://wiki.ecmascript.org/doku.php?id=strawman:existential_operator)
+
 ### ES Discussions
+[Optional Chaining aka Existential Operator Null Propagation](https://esdiscuss.org/topic/optional-chaining-aka-existential-operator-null-propagation)
+
 [Existential Operator Null Propogation Operator](https://esdiscuss.org/topic/existential-operator-null-propagation-operator)
 
 [Existential Operator](https://esdiscuss.org/topic/the-existential-operator)
@@ -79,6 +90,7 @@ Node 7 provides native Proxy, but 6.x will use a polyfill to emulate Proxy.
 
 ## Performance
 Performance is acceptable for most situations, but it should be noted that there is a performance penalty using nevernull over traditional safeguarded access.
+
 Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/master/test/performance/test.js)
 
 ### Speed
@@ -207,6 +219,7 @@ The node process running all the below tests never went above 30MB.
 ## Release Notes
 ### 1.0.0
 Old API has been deprecated and is no longer supported.  String selectors no longer are needed.
+
 e.g.
 ```
 //deprecated syntax
