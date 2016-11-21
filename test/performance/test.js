@@ -132,6 +132,7 @@ result = nn(example).a5.b.c();
 \`\`\`
 
 Results Table
+
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
 | traditional | ${ nn(result).traditional3LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional3LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional3LayersDeep.memory.usedInKB() } |
@@ -139,6 +140,7 @@ Results Table
 
 
 Comparison Table
+
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
 | ${ nn(result).comparison.threeLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.threeLayersDeep.nevernullUsesXtimesMoreMemory() } |
@@ -158,12 +160,14 @@ result = nn(example).a5.b.c.d.e();
 \`\`\`
 
 Results Table
+
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
 | traditional | ${ nn(result).traditional5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional5LayersDeep.memory.usedInKB() } |
 | nevernull   | ${ nn(result).nevernull5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).nevernull5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).nevernull5LayersDeep.memory.usedInKB() } |
 
 Comparison Table
+
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
 | ${ nn(result).comparison.fiveLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.fiveLayersDeep.nevernullUsesXtimesMoreMemory() } |
