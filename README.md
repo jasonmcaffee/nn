@@ -113,9 +113,8 @@ result = nn(example).a5.b.c();
 ```
 
 
-|Access of Property Nested 3 Layers Deep ||||
-Safeguard Type | nanoseconds | milliseconds| KB memory used |
-:------------: | :-----------: | :-----------: | -----------: |
+|Safeguard Type | nanoseconds | milliseconds| KB memory used |
+|:------------: | :-----------: | :-----------: | -----------: |
 | traditional | 341800 | 0.3418 | 120.21875 |
 | nevernull   | 609580 | 0.60958 | 191.25 |
 [Performance Test Results Table]
