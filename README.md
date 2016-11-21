@@ -95,66 +95,6 @@ Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/ma
 
 ### Node v7.1.0 Native Proxy
 
-performance test of 200 iterations starting...
-
-#### 200 Iterations Result
-
-##### Access Property Nested 3 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b){
-    result = example.a5.b.c;
-}
-
-//nevernull
-result = nn(example).a5.b.c();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 250825 | 0.250825 | 120.21875 |
-| nevernull   | 492446 | 0.492446 | 193.21875 |
-
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 1.96 | 1.61 |
-
-##### Access Property Nested 5 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
-    result = example.a5.b.c.d.e;
-}
-
-//nevernull
-result = nn(example).a5.b.c.d.e();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 54272 | 0.054272 | 51.25 |
-| nevernull   | 304094 | 0.304094 | 247.390625 |
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 5.6 | 4.83 |
-
-
 #### 2000 Iterations Result
 
 ##### Access Property Nested 3 Layers Deep
@@ -214,64 +154,6 @@ Comparison Table
 
 
 #### Node v6.0.0 Using Polyfill
-
-#### 200 Iterations Result
-
-##### Access Property Nested 3 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b){
-    result = example.a5.b.c;
-}
-
-//nevernull
-result = nn(example).a5.b.c();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 255589 | 0.255589 | 126.640625 |
-| nevernull   | 468782 | 0.468782 | 193.3515625 |
-
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 1.83 | 1.53 |
-
-##### Access Property Nested 5 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
-    result = example.a5.b.c.d.e;
-}
-
-//nevernull
-result = nn(example).a5.b.c.d.e();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 65013 | 0.065013 | 50.9921875 |
-| nevernull   | 403863 | 0.403863 | 249.5 |
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 6.21 | 4.89 |
-
 
 #### 2000 Iterations Result
 
