@@ -144,6 +144,17 @@ Comparison Table
 `;
 };
 
+const writePerformanceResultsToMdFile = (resultMarkdown)=>{
+    var fs = require('fs');
+    fs.writeFile("perftest-results/perftest.md", resultMarkdown, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log("The file was saved!");
+    });
+}
+
 const formatTestResult = (timeTotalResult, memoryUsageResult)=> {
     return {
         totalTimes: {
@@ -178,7 +189,9 @@ const runPerfTests = (iterations) =>{
         }
     };
 
-    console.log(generateMarkdownForPerfTestResult(result));
+    let perftestResultMarkdown = generateMarkdownForPerfTestResult(result)
+    console.log(perftestResultMarkdown);
+    writePerformanceResultsToMdFile(perftestResultMarkdown);
 };
 
 runPerfTests(iterationsToRun);
