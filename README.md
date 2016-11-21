@@ -112,6 +112,7 @@ result = nn(example).a5.b.c();
 ```
 
 Results Table
+
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
 | traditional | 237693 | 0.237693 | 120.21875 |
@@ -119,6 +120,7 @@ Results Table
 
 
 Comparison Table
+
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
 | 1.96 | 1.59 |
