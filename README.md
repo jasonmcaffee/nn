@@ -153,7 +153,7 @@ Comparison Table
 | 8.96 | 0.91 |
 
 
-#### Node v6.0.0 Using Polyfill
+### Node v6.0.0 Using Polyfill
 
 #### 2000 Iterations Result
 
