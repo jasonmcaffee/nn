@@ -81,37 +81,6 @@ const timeTotal = (timeReturningFunction, iterations) =>{
     return totalTime;
 };
 
-const prettyJSON = (obj)=>{
-    return JSON.stringify(obj, null, 2);
-};
-
-const generateMarkdownForPerfTestResultOld = (result) =>{
-    return `
-        ## Performance
-
-        ### ${ nn(result).iterationsRan() } Iterations
-
-        #### Access Property Nested 3 Layers Deep
-        Traditional time taken in nanoseconds:  ${ nn(result).traditional3LayersDeep.totalTimes.nanoseconds() }
-        NeverNull time taken in nanoseconds:    ${ nn(result).nevernull3LayersDeep.totalTimes.nanoseconds() }
-
-        Traditional time taken in milliseconds: ${ nn(result).traditional3LayersDeep.totalTimes.milliseconds() }
-        NeverNull time taken in milliseconds:   ${ nn(result).nevernull3LayersDeep.totalTimes.milliseconds() }
-
-        Traditional memory used: ${ nn(result).traditional3LayersDeep.memory.usedInKB() }
-        NeverNull memory use: ${ nn(result).nevernull3LayersDeep.memory.usedInKB() }
-
-        #### Access Property Nested 5 Layers Deep
-        Traditional time taken in nanoseconds:  ${ nn(result).traditional5LayersDeep.totalTimes.nanoseconds() }
-        NeverNull time taken in nanoseconds:    ${ nn(result).nevernull5LayersDeep.totalTimes.nanoseconds() }
-
-        Traditional time taken in milliseconds: ${ nn(result).traditional5LayersDeep.totalTimes.milliseconds() }
-        NeverNull time taken in milliseconds:   ${ nn(result).nevernull5LayersDeep.totalTimes.milliseconds() }
-
-        Traditional memory used: ${ nn(result).traditional5LayersDeep.memory.usedInKB() }
-        NeverNull memory use: ${ nn(result).nevernull5LayersDeep.memory.usedInKB() }
-    `;
-};
 
 const generateMarkdownForPerfTestResult = (result) =>{
     return `
