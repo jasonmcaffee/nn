@@ -131,17 +131,16 @@ if(example && example.a5 && example.a5.b){
 result = nn(example).a5.b.c();
 \`\`\`
 
-
-|Access of Property Nested 3 Layers Deep ||||
-Safeguard Type | nanoseconds | milliseconds| KB memory used |
-:------------: | :-----------: | :-----------: | -----------: |
+Results Table
+|Safeguard Type | nanoseconds | milliseconds| KB memory used |
+|:------------: | :-----------: | :-----------: | -----------: |
 | traditional | ${ nn(result).traditional3LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional3LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional3LayersDeep.memory.usedInKB() } |
 | nevernull   | ${ nn(result).nevernull3LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).nevernull3LayersDeep.totalTimes.milliseconds() } | ${ nn(result).nevernull3LayersDeep.memory.usedInKB() } |
-[Performance Test Results Table]
 
-|Comparison||
-NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-:------- | :--------- |
+
+Comparison Table
+|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
+|:------- | :--------- |
 | ${ nn(result).comparison.threeLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.threeLayersDeep.nevernullUsesXtimesMoreMemory() } |
 
 ##### Access Property Nested 5 Layers Deep
@@ -158,16 +157,15 @@ if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
 result = nn(example).a5.b.c.d.e();
 \`\`\`
 
-|Access of Property Nested 5 Layers Deep ||||
-Safeguard Type | nanoseconds | milliseconds| KB memory used |
-:------------: | :-----------: | :-----------: | -----------: |
+Results Table
+|Safeguard Type | nanoseconds | milliseconds| KB memory used |
+|:------------: | :-----------: | :-----------: | -----------: |
 | traditional | ${ nn(result).traditional5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional5LayersDeep.memory.usedInKB() } |
 | nevernull   | ${ nn(result).nevernull5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).nevernull5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).nevernull5LayersDeep.memory.usedInKB() } |
-[Performance Test Results Table]
 
-|Comparison||
-NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-:------- | :--------- |
+Comparison Table
+|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
+|:------- | :--------- |
 | ${ nn(result).comparison.fiveLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.fiveLayersDeep.nevernullUsesXtimesMoreMemory() } |
 
 `;
