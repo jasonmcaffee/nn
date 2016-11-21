@@ -17,11 +17,12 @@ const timeThis = functionToTime =>{
 };
 
 const measureMemoryUsageInKB = (functionToGatherMemoryUsageFor, funcWhichAcceptsResults=(functionToGatherMemoryUsageForResult, memoryUsageResult)=>0) =>{
+    gc();
     let start = process.memoryUsage().heapUsed;
     let resultFromFunctionToGatherMemoryUsageFor = functionToGatherMemoryUsageFor();
     let totalMemoryUsedInKB = (process.memoryUsage().heapUsed - start) / 1024;
     gc();
-    funcWhichAcceptsResults(resultFromFunctionToGatherMemoryUsageFor, totalMemoryUsedInKB);
+    return funcWhichAcceptsResults(resultFromFunctionToGatherMemoryUsageFor, totalMemoryUsedInKB);
 };
 
 let example = {
@@ -51,7 +52,7 @@ const timeTraditionalSafeguardedAccess5LayersDeep = ()=>{
 
 const timeNevernullSafeguardedAccess5LayersDeep = ()=>{
     return timeThis(()=>{
-        let result = nn(example).a.b.c.d.e();
+        let result = nn(example).a5.b.c.d.e();
     });
 };
 
@@ -67,7 +68,7 @@ const timeTraditionalSafeguardedAccess3LayersDeep = ()=>{
 
 const timeNevernullSafeguardedAccess3LayersDeep = ()=>{
     return timeThis(()=>{
-        let result = nn(example).a.b.c();
+        let result = nn(example).a5.b.c();
     });
 };
 
@@ -80,78 +81,133 @@ const timeTotal = (timeReturningFunction, iterations) =>{
     return totalTime;
 };
 
+const prettyJSON = (obj)=>{
+    return JSON.stringify(obj, null, 2);
+};
+
+const generateMarkdownForPerfTestResultOld = (result) =>{
+    return `
+        ## Performance
+
+        ### ${ nn(result).iterationsRan() } Iterations
+
+        #### Access Property Nested 3 Layers Deep
+        Traditional time taken in nanoseconds:  ${ nn(result).traditional3LayersDeep.totalTimes.nanoseconds() }
+        NeverNull time taken in nanoseconds:    ${ nn(result).nevernull3LayersDeep.totalTimes.nanoseconds() }
+
+        Traditional time taken in milliseconds: ${ nn(result).traditional3LayersDeep.totalTimes.milliseconds() }
+        NeverNull time taken in milliseconds:   ${ nn(result).nevernull3LayersDeep.totalTimes.milliseconds() }
+
+        Traditional memory used: ${ nn(result).traditional3LayersDeep.memory.usedInKB() }
+        NeverNull memory use: ${ nn(result).nevernull3LayersDeep.memory.usedInKB() }
+
+        #### Access Property Nested 5 Layers Deep
+        Traditional time taken in nanoseconds:  ${ nn(result).traditional5LayersDeep.totalTimes.nanoseconds() }
+        NeverNull time taken in nanoseconds:    ${ nn(result).nevernull5LayersDeep.totalTimes.nanoseconds() }
+
+        Traditional time taken in milliseconds: ${ nn(result).traditional5LayersDeep.totalTimes.milliseconds() }
+        NeverNull time taken in milliseconds:   ${ nn(result).nevernull5LayersDeep.totalTimes.milliseconds() }
+
+        Traditional memory used: ${ nn(result).traditional5LayersDeep.memory.usedInKB() }
+        NeverNull memory use: ${ nn(result).nevernull5LayersDeep.memory.usedInKB() }
+    `;
+};
+
+const generateMarkdownForPerfTestResult = (result) =>{
+    return `
+#### ${ nn(result).iterationsRan() } Iterations Result
+
+##### Access Property Nested 3 Layers Deep
+Time and compare traditional safeguarded access to nevernull safeguarded access.
+
+e.g.
+\`\`\`
+//traditional
+if(example && example.a5 && example.a5.b){
+    result = example.a5.b.c;
+}
+
+//nevernull
+result = nn(example).a5.b.c();
+\`\`\`
+
+
+|Access of Property Nested 3 Layers Deep ||||
+Safeguard Type | nanoseconds | milliseconds| KB memory used |
+:------------: | :-----------: | :-----------: | -----------: |
+| traditional | ${ nn(result).traditional3LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional3LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional3LayersDeep.memory.usedInKB() } |
+| nevernull   | ${ nn(result).nevernull3LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).nevernull3LayersDeep.totalTimes.milliseconds() } | ${ nn(result).nevernull3LayersDeep.memory.usedInKB() } |
+[Performance Test Results Table]
+
+|Comparison||
+NeverNull is N Times Slower | NeverNull uses N Times More Memory |
+:------- | :--------- |
+| ${ nn(result).comparison.threeLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.threeLayersDeep.nevernullUsesXtimesMoreMemory() } |
+
+##### Access Property Nested 5 Layers Deep
+Time and compare traditional safeguarded access to nevernull safeguarded access.
+
+e.g.
+\`\`\`
+//traditional
+if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
+    result = example.a5.b.c.d.e;
+}
+
+//nevernull
+result = nn(example).a5.b.c.d.e();
+\`\`\`
+
+|Access of Property Nested 5 Layers Deep ||||
+Safeguard Type | nanoseconds | milliseconds| KB memory used |
+:------------: | :-----------: | :-----------: | -----------: |
+| traditional | ${ nn(result).traditional5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).traditional5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).traditional5LayersDeep.memory.usedInKB() } |
+| nevernull   | ${ nn(result).nevernull5LayersDeep.totalTimes.nanoseconds() } | ${ nn(result).nevernull5LayersDeep.totalTimes.milliseconds() } | ${ nn(result).nevernull5LayersDeep.memory.usedInKB() } |
+[Performance Test Results Table]
+
+|Comparison||
+NeverNull is N Times Slower | NeverNull uses N Times More Memory |
+:------- | :--------- |
+| ${ nn(result).comparison.fiveLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.fiveLayersDeep.nevernullUsesXtimesMoreMemory() } |
+
+`;
+};
+
+const formatTestResult = (timeTotalResult, memoryUsageResult)=> {
+    return {
+        totalTimes: {
+            nanoseconds: timeTotalResult,
+            milliseconds: timeTotalResult / 1000000
+        },
+        memory: {
+            usedInKB: memoryUsageResult
+        }
+    };
+};
+
 const runPerfTests = (iterations) =>{
-    const fiveLayersOfNestingLabel = "5 layers of nesting";
-    const threeLayersOfNestingLabel = "3 layers of nesting";
-    const traditionalKbLabel = "total KB memory used for traditional";
-    const nnKbLabel = "total KB memory used for nevernull";
+    let result = {
+        iterationsRan: iterations,
+        traditional3LayersDeep : measureMemoryUsageInKB(()=>timeTotal(timeTraditionalSafeguardedAccess3LayersDeep, iterations), formatTestResult),
+        nevernull3LayersDeep: measureMemoryUsageInKB(()=>timeTotal(timeNevernullSafeguardedAccess3LayersDeep, iterations), formatTestResult),
+        traditional5LayersDeep : measureMemoryUsageInKB(()=>timeTotal(timeTraditionalSafeguardedAccess5LayersDeep, iterations), formatTestResult),
+        nevernull5LayersDeep: measureMemoryUsageInKB(()=>timeTotal(timeNevernullSafeguardedAccess5LayersDeep, iterations), formatTestResult),
 
-    let totalTimes = {
-        nanoseconds:{
-            [fiveLayersOfNestingLabel]:{},
-            [threeLayersOfNestingLabel]:{}
-        },
-        milliseconds:{
-            [fiveLayersOfNestingLabel]:{},
-            [threeLayersOfNestingLabel]:{}
-        },
-        percentage:{
-            [fiveLayersOfNestingLabel]:{},
-            [threeLayersOfNestingLabel]:{}
-        }
-    };
-    let memoryUsage = {
-        [fiveLayersOfNestingLabel]:{
-            [traditionalKbLabel]:"",
-            [nnKbLabel]:""
-        },
-        [threeLayersOfNestingLabel]:{
-            [traditionalKbLabel]:"",
-            [nnKbLabel]:""
+        get comparison() {
+            return {
+                threeLayersDeep:{
+                    nevernullIsXtimesSlower: Math.round(nn(this).nevernull3LayersDeep.totalTimes.nanoseconds() / nn(this).traditional3LayersDeep.totalTimes.nanoseconds() * 100) / 100,
+                    nevernullUsesXtimesMoreMemory: Math.round(nn(this).nevernull3LayersDeep.memory.usedInKB() / nn(this).traditional3LayersDeep.memory.usedInKB() * 100) / 100
+                },
+                fiveLayersDeep:{
+                    nevernullIsXtimesSlower: Math.round(nn(this).nevernull5LayersDeep.totalTimes.nanoseconds() / nn(this).traditional5LayersDeep.totalTimes.nanoseconds() * 100) / 100,
+                    nevernullUsesXtimesMoreMemory: Math.round(nn(this).nevernull5LayersDeep.memory.usedInKB() / nn(this).traditional5LayersDeep.memory.usedInKB() * 100) / 100
+                }
+            };
         }
     };
 
-    measureMemoryUsageInKB(()=>timeTotal(timeTraditionalSafeguardedAccess5LayersDeep, iterations), (timeTotalResult, memoryUsageResult)=>{
-        totalTimes.nanoseconds[fiveLayersOfNestingLabel]["total nano for traditional"] = timeTotalResult;
-        totalTimes.milliseconds[fiveLayersOfNestingLabel]["total ms for traditional"] = timeTotalResult / 1000000;
-        memoryUsage[fiveLayersOfNestingLabel][traditionalKbLabel] = memoryUsageResult;
-    });
-
-    measureMemoryUsageInKB(()=>timeTotal(timeNevernullSafeguardedAccess5LayersDeep, iterations), (timeTotalResult, memoryUsageResult)=>{
-        totalTimes.nanoseconds[fiveLayersOfNestingLabel]["total nano for nevernull"] = timeTotalResult;
-        totalTimes.milliseconds[fiveLayersOfNestingLabel]["total ms for nevernull"] = timeTotalResult / 1000000;
-        memoryUsage[fiveLayersOfNestingLabel][nnKbLabel] = memoryUsageResult;
-    });
-
-    measureMemoryUsageInKB(()=>timeTotal(timeTraditionalSafeguardedAccess3LayersDeep, iterations), (timeTotalResult, memoryUsageResult)=>{
-        totalTimes.nanoseconds[threeLayersOfNestingLabel]["total nano for traditional"] = timeTotalResult;
-        totalTimes.milliseconds[threeLayersOfNestingLabel]["total ms for traditional"] = timeTotalResult / 1000000;
-        memoryUsage[threeLayersOfNestingLabel][traditionalKbLabel] = memoryUsageResult;
-    });
-
-    measureMemoryUsageInKB(()=>timeTotal(timeNevernullSafeguardedAccess3LayersDeep, iterations), (timeTotalResult, memoryUsageResult)=>{
-        totalTimes.nanoseconds[threeLayersOfNestingLabel]["total nano for nevernull"] = timeTotalResult;
-        totalTimes.milliseconds[threeLayersOfNestingLabel]["total ms for nevernull"] = timeTotalResult / 1000000;
-        memoryUsage[threeLayersOfNestingLabel][nnKbLabel] = memoryUsageResult;
-    });
-
-    let threeLayersTraditionalNano = totalTimes.nanoseconds[threeLayersOfNestingLabel]["total nano for traditional"];
-    let threeLayersNevernullNano = Math.floor(totalTimes.nanoseconds[threeLayersOfNestingLabel]["total nano for nevernull"]);
-
-    totalTimes.percentage[threeLayersOfNestingLabel] = {
-        "traditional is faster by ":  Math.floor(threeLayersNevernullNano / threeLayersTraditionalNano * 100)
-    };
-
-
-    let fiveLayersTraditionalNano = totalTimes.nanoseconds[fiveLayersOfNestingLabel]["total nano for traditional"];
-    let fiveLayersNevernullNano = Math.floor(totalTimes.nanoseconds[fiveLayersOfNestingLabel]["total nano for nevernull"]);
-
-    totalTimes.percentage[fiveLayersOfNestingLabel] = {
-        "traditional is faster by ":  Math.floor(fiveLayersNevernullNano / fiveLayersTraditionalNano * 100)
-    };
-
-    console.log(JSON.stringify(totalTimes, null, 2));
-    console.log(JSON.stringify(memoryUsage, null, 2));
+    console.log(generateMarkdownForPerfTestResult(result));
 };
 
 runPerfTests(iterationsToRun);
