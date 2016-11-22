@@ -17,7 +17,9 @@
     "TypeError cannot access property of undefined",
     "of undefined",
     "safe navigation",
-    "query object"
+    "existential operator",
+    "elvis operator",
+    "optional chaining"
   ],
   "readmeFilename": "README.md",
   "repository": {
