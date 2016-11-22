@@ -1,10 +1,8 @@
 const nn = require('../../lib/nevernull');
 
+//program arguments
 const iterationsToRun = parseInt(process.argv[2]);
-if(!iterationsToRun){
-    console.error('unable to run test because number of iterations to run was not passed');
-    process.exit();
-}
+
 
 console.log(`performance test of ${iterationsToRun} iterations starting...`);
 
@@ -81,14 +79,19 @@ const timeTotal = (timeReturningFunction, iterations) =>{
     return totalTime;
 };
 
-
-const generateMarkdownForPerfTestResult = (result) =>{
+const generateMarkdownForPerfTestOverviewSection = ()=>{
     return `
-#### ${ nn(result).iterationsRan() } Iterations Result
-
-##### Access Property Nested 3 Layers Deep
+# Performance Test Results for Node ${process.version}
 Time and compare traditional safeguarded access to nevernull safeguarded access.
 
+## How Testing is Done
+A given test for N iterations is performed by timing access to nested properties.
+
+Access is tested using traditional property safeguarded access, as well as the nevernull safeguarded access.
+
+Each individual property access is timed in nanoseconds, and accumulated into totals.
+
+### Access Property Nested 3 Layers Deep
 e.g.
 \`\`\`
 //traditional
@@ -100,6 +103,29 @@ if(example && example.a5 && example.a5.b){
 result = nn(example).a5.b.c();
 \`\`\`
 
+### Access Property Nested 5 Layers Deep
+e.g.
+\`\`\`
+//traditional
+if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
+    result = example.a5.b.c.d.e;
+}
+
+//nevernull
+result = nn(example).a5.b.c.d.e();
+\`\`\`
+
+
+## Results of Iteration Series
+
+`
+};
+
+const generateMarkdownForPerfTestResult = (result) =>{
+    return `
+### ${ nn(result).iterationsRan() } Iterations Result
+
+#### Access Property Nested 3 Layers Deep
 Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
@@ -114,20 +140,7 @@ Comparison Table
 |:------- | :--------- |
 | ${ nn(result).comparison.threeLayersDeep.nevernullIsXtimesSlower() } | ${ nn(result).comparison.threeLayersDeep.nevernullUsesXtimesMoreMemory() } |
 
-##### Access Property Nested 5 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-\`\`\`
-//traditional
-if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
-    result = example.a5.b.c.d.e;
-}
-
-//nevernull
-result = nn(example).a5.b.c.d.e();
-\`\`\`
-
+#### Access Property Nested 5 Layers Deep
 Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
@@ -146,14 +159,14 @@ Comparison Table
 
 const writePerformanceResultsToMdFile = (resultMarkdown)=>{
     var fs = require('fs');
-    fs.writeFile("perftest-results/perftest.md", resultMarkdown, function(err) {
+    fs.writeFile(`perftest-results/Node-${process.version}.md`, resultMarkdown, function(err) {
         if(err) {
             return console.log(err);
         }
 
         console.log("The file was saved!");
     });
-}
+};
 
 const formatTestResult = (timeTotalResult, memoryUsageResult)=> {
     return {
@@ -189,9 +202,30 @@ const runPerfTests = (iterations) =>{
         }
     };
 
-    let perftestResultMarkdown = generateMarkdownForPerfTestResult(result)
-    console.log(perftestResultMarkdown);
-    writePerformanceResultsToMdFile(perftestResultMarkdown);
+    return result;
 };
 
-runPerfTests(iterationsToRun);
+const runIterationsAndGenerateReportMd = iterationsToRun =>{
+    let perfTestResult = runPerfTests(iterationsToRun);
+    let perftestResultMarkdown = generateMarkdownForPerfTestResult(perfTestResult);
+    console.log(perftestResultMarkdown);
+    return perftestResultMarkdown;
+};
+
+const runPredefinedSetOfIterationsAndWriteReportMdToDisk = ()=>{
+    let perfTestResultMarkdown = [20, 200, 2000].map(runIterationsAndGenerateReportMd).join('\n');
+    writePerformanceResultsToMdFile(
+      generateMarkdownForPerfTestOverviewSection() +
+      perfTestResultMarkdown);
+};
+
+/**
+ * If iterations are passed in, only run the number of iterations specified.
+ * Otherwise, run a series of iterations and write out a report in md so it can be viewed on github.
+ */
+if(iterationsToRun > 0){
+    runIterationsAndGenerateReportMd(iterationsToRun);
+}else{
+    runPredefinedSetOfIterationsAndWriteReportMdToDisk();
+}
+

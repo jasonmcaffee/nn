@@ -89,128 +89,15 @@ The proposal for the Existential Operator is currently in Stage 0 draft status.
 Node 7 provides native Proxy, but 6.x will use a polyfill to emulate Proxy.
 
 ## Performance
-Performance is acceptable for most situations, but it should be noted that there is a performance penalty using nevernull over traditional safeguarded access.
+Performance is acceptable for most situations, but it should be noted that there can be a performance penalty using nevernull over traditional safeguarded access.
 
-Performance tests can be found [here](https://github.com/jasonmcaffee/nn/blob/master/test/performance/test.js)
+Detailed performance reports can be found here:
 
-### Node v7.1.0 Native Proxy
+[Node v7.1.0 Using Native Proxy](https://github.com/jasonmcaffee/nn/blob/master/perftest-results/Node-v7.1.0.md)
 
-#### 2000 Iterations Result
+[Node v6.0.0 Using Proxy Polyfill](https://github.com/jasonmcaffee/nn/blob/master/perftest-results/Node-v7.1.0.md)
 
-##### Access Property Nested 3 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b){
-    result = example.a5.b.c;
-}
-
-//nevernull
-result = nn(example).a5.b.c();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 497379 | 0.497379 | 611.03125 |
-| nevernull   | 2430506 | 2.430506 | 1783.0859375 |
-
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 4.89 | 2.92 |
-
-##### Access Property Nested 5 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
-    result = example.a5.b.c.d.e;
-}
-
-//nevernull
-result = nn(example).a5.b.c.d.e();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 312517 | 0.312517 | 461.3671875 |
-| nevernull   | 2799455 | 2.799455 | 418.09375 |
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 8.96 | 0.91 |
-
-
-### Node v6.0.0 Using Polyfill
-
-#### 2000 Iterations Result
-
-##### Access Property Nested 3 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b){
-    result = example.a5.b.c;
-}
-
-//nevernull
-result = nn(example).a5.b.c();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 340052 | 0.340052 | 613.7578125 |
-| nevernull   | 2518258 | 2.518258 | 1782.421875 |
-
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 7.41 | 2.9 |
-
-##### Access Property Nested 5 Layers Deep
-Time and compare traditional safeguarded access to nevernull safeguarded access.
-
-e.g.
-```
-//traditional
-if(example && example.a5 && example.a5.b && example.a5.b.c && example.a5.b.c.d){
-    result = example.a5.b.c.d.e;
-}
-
-//nevernull
-result = nn(example).a5.b.c.d.e();
-```
-
-Results Table
-
-|Safeguard Type | nanoseconds | milliseconds| KB memory used |
-|:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 270247 | 0.270247 | 461.0859375 |
-| nevernull   | 3183283 | 3.183283 | 417.9140625 |
-
-Comparison Table
-
-|NeverNull is N Times Slower | NeverNull uses N Times More Memory |
-|:------- | :--------- |
-| 11.78 | 0.91 |
+Performance tests that generate the reports can be found [here](https://github.com/jasonmcaffee/nn/blob/master/test/performance/test.js)
 
 ## Release Notes
 ### 1.0.0
