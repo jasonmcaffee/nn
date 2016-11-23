@@ -6,7 +6,7 @@ The browser version of nevernull can be found [here](https://github.com/jasonmca
 ## Examples
 To easily try out nevernull, you can fork the codio project & box [here](https://codio.com/jasonmcaffee/nn/tree/README.md)
 
-### No Uncaught ReferenceError or Uncaught TypeError Errors
+### Avoid "Uncaught TypeError: Cannot read property x of undefined"
 The function-object returned from nn guarantees safe navigation of its object tree.
 This allows us to avoid boilerplate value checking.
 ```
