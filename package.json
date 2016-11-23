@@ -27,7 +27,7 @@
     "url": "https://github.com/jasonmcaffee/nn.git"
   },
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=6.0.0"
   },
   "scripts": {
     "codio:download-node": "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
