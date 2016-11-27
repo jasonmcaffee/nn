@@ -145,10 +145,12 @@ describe("nevernull", ()=>{
     };
 
     let nnPerson = nn(person);
-    nnPerson.address = nn.default({ country: 'USA' });
+
+    //address is already defined, so default should not be applied
+    nnPerson.address = nn.elvis({ country: 'USA' });
     expect(nnPerson.address.country()).toEqual(undefined);
 
-    nnPerson.name = nn.default({first: 'jason' });
+    nnPerson.name = nn.elvis({first: 'jason' });
     expect(nnPerson.name.first()).toEqual('jason');
 
   });

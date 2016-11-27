@@ -86,7 +86,7 @@ const handler = {
  */
 const nnUndefinedProperty = nn(undefined);
 
-nn.default = (defaultValue)=>{
+nn.elvis = (defaultValue)=>{
   let result = ()=>{
     return defaultValue;
   };
