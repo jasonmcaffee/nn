@@ -70,14 +70,7 @@ const handler = {
   set: function(target, property, value, receiver){
     let rawTarget = target();
     if(rawTarget === undefined){ return; }
-
-    if(typeof(value)==='function' && value.__is_nn_default__){
-      let currentRawPropertyValue = rawTarget[property];
-      rawTarget[property] = currentRawPropertyValue === undefined ? value() : currentRawPropertyValue;
-    }else{
-      rawTarget[property] = value;
-    }
-
+    rawTarget[property] = value;
   }
 };
 
@@ -85,14 +78,5 @@ const handler = {
  * Cache the undefined version for speed.
  */
 const nnUndefinedProperty = nn(undefined);
-
-nn.elvis = (defaultValue)=>{
-  let result = ()=>{
-    return defaultValue;
-  };
-  result.__is_nn_default__ = true;
-
-  return result;
-}
 
 module.exports = nn;

@@ -44,29 +44,29 @@ Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 79196 | 0.079196 | 20.125 |
-| nevernull   | 159756 | 0.159756 | 27.734375 |
+| traditional | 89319 | 0.089319 | 20.125 |
+| nevernull   | 184974 | 0.184974 | 27.734375 |
 
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 2.02 | 1.38 |
+| 2.07 | 1.38 |
 
 #### Access Property Nested 5 Layers Deep
 Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 46619 | 0.046619 | 13.5 |
-| nevernull   | 182248 | 0.182248 | 34.328125 |
+| traditional | 54605 | 0.054605 | 13.5 |
+| nevernull   | 233918 | 0.233918 | 34.328125 |
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 3.91 | 2.54 |
+| 4.28 | 2.54 |
 
 
 
@@ -77,29 +77,29 @@ Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 312599 | 0.312599 | 110.140625 |
-| nevernull   | 541162 | 0.541162 | 187.15625 |
+| traditional | 522908 | 0.522908 | 106.8515625 |
+| nevernull   | 886845 | 0.886845 | 187.15625 |
 
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 1.73 | 1.7 |
+| 1.7 | 1.75 |
 
 #### Access Property Nested 5 Layers Deep
 Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 95187 | 0.095187 | 51.0859375 |
-| nevernull   | 411144 | 0.411144 | 247.2265625 |
+| traditional | 185310 | 0.18531 | 51.0859375 |
+| nevernull   | 708307 | 0.708307 | 249.625 |
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 4.32 | 4.84 |
+| 3.82 | 4.89 |
 
 
 
@@ -110,27 +110,27 @@ Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 503338 | 0.503338 | 456.5625 |
-| nevernull   | 4666947 | 4.666947 | 1768.875 |
+| traditional | 312921 | 0.312921 | 456.5625 |
+| nevernull   | 3577654 | 3.577654 | 1768.875 |
 
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 9.27 | 3.87 |
+| 11.43 | 3.87 |
 
 #### Access Property Nested 5 Layers Deep
 Results Table
 
 |Safeguard Type | nanoseconds | milliseconds| KB memory used |
 |:------------: | :-----------: | :-----------: | -----------: |
-| traditional | 707051 | 0.707051 | 460.4375 |
-| nevernull   | 6663872 | 6.663872 | 410.8828125 |
+| traditional | 470592 | 0.470592 | 460.4375 |
+| nevernull   | 4211229 | 4.211229 | 410.8828125 |
 
 Comparison Table
 
 |NeverNull is N Times Slower | NeverNull uses N Times More Memory |
 |:------- | :--------- |
-| 9.42 | 0.89 |
+| 8.95 | 0.89 |
 

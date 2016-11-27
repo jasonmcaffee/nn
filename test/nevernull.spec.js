@@ -95,7 +95,7 @@ describe("nevernull", ()=>{
     expect(person.name).not.toEqual(nnName());
   });
 
-  it("should allow property values to be conditionally set", ()=>{
+  it("should allow property values to be safely set", ()=>{
     let person = {
       name: {
         first: 'jason'
@@ -134,25 +134,6 @@ describe("nevernull", ()=>{
 
     expect(nnPerson.name.first).not.toEqual('sarah');
     expect(typeof nnPerson.name.first).toEqual('function');
-  });
-
-  it("should provide Elvis Operator like functionality for setting values when properties are undefined", ()=>{
-    let person = {
-      address: {
-        city: 'Salt Lake City',
-        state: 'Utah'
-      }
-    };
-
-    let nnPerson = nn(person);
-
-    //address is already defined, so default should not be applied
-    nnPerson.address = nn.elvis({ country: 'USA' });
-    expect(nnPerson.address.country()).toEqual(undefined);
-
-    nnPerson.name = nn.elvis({first: 'jason' });
-    expect(nnPerson.name.first()).toEqual('jason');
-
   });
 
 });
