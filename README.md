@@ -135,3 +135,6 @@ Old API can be viewed and/or forked [here](https://github.com/jasonmcaffee/nn/tr
 
 ### 1.2.0
 Thanks to [inlineblock](https://github.com/inlineblock) for their pull request to optimize performance by returning a cached nn(undefined) when the property value is undefined.
+
+### 1.3.0
+API now provides the ability to safely set property values.  If the target is undefined, set has no effect, and no error is thrown.
