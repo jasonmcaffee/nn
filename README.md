@@ -37,6 +37,28 @@ nnPerson.employer.name();   // == undefined
 nn(person).address.city()   // == undefined
 ```
 
+### Easily Set Property Values
+Property values can be set in several ways.
+
+#### Assign Property to Raw Target
+To assign a property named 'first' to the 'name' target, we can simply access and assign to the raw 'name' object.
+```
+nnPerson.name().first = 'jason';
+```
+But what if name is undefined? We'd end up with an error.
+
+#### Safely Assign Property Values
+To avoid the above error, nevernull allows us to avoid boiler plate checking and assign value to the target only if the target is not undefined.
+```
+nnPerson.name.first = 'jason';
+//since the address object is undefined, setting properties on it will have no effect, and no error will be thrown.
+nnPerson.address.city = 'salt lake city';
+
+nnPerson.name.first();      // == 'jason'
+nnPerson.address.city();    // == undefined 
+
+```
+
 [See the test spec for more examples](https://github.com/jasonmcaffee/nn/blob/master/test/nevernull.spec.js)
 
 ## Install

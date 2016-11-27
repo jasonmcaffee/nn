@@ -95,7 +95,7 @@ describe("nevernull", ()=>{
     expect(person.name).not.toEqual(nnName());
   });
 
-  it("should not support assigning properties to nevernull function objects", ()=>{
+  it("should allow property values to be safely set", ()=>{
     let person = {
       name: {
         first: 'jason'
@@ -104,9 +104,36 @@ describe("nevernull", ()=>{
 
     let nnPerson = nn(person);
 
-    nnPerson.name.dontDoThis = 123;
-    expect(nnPerson.name.dontDoThis).not.toEqual(123);
-    expect(typeof nnPerson.name.dontDoThis).toEqual('function');
+    //set values when target is defined
+    nnPerson.name = {first:'julie'};
+    expect(nnPerson.name.first()).toEqual('julie');
+    expect(person.name.first).toEqual(nnPerson.name.first());
+
+    nnPerson.name.first = 'jason';
+    expect(nnPerson.name.first()).toEqual('jason');
+    expect(person.name.first).toEqual(nnPerson.name.first());
+
+    nnPerson.name = { first: 'edward' };
+    expect(person.name).toEqual(nnPerson.name());
+
+    //dont set values when target is undefined
+    nnPerson.address.city = 'salt lake city';
+    expect(person.address).toEqual(undefined);
+  });
+
+  it("should not allow for property assignments to break the nevernull api", ()=>{
+    let person = {
+      name: {
+        first: 'jason'
+      }
+    };
+
+    let nnPerson = nn(person);
+
+    nnPerson.name.first = 'sarah';
+
+    expect(nnPerson.name.first).not.toEqual('sarah');
+    expect(typeof nnPerson.name.first).toEqual('function');
   });
 
 });
