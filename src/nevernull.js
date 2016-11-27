@@ -56,6 +56,28 @@ const handler = {
 
     //ensure the property is never null.
     return nn(rawPropertyValue);
+  },
+
+  /**
+   * Conditionally sets the target[property].
+   * If the target has a value (ie is not undefined), property will be set to the value.
+   * If the target is undefined, the attempt to set the property will be ignored.
+   * @param target - target which contains the property we will set the value of.
+   * @param property - property name on the target which should be assigned value.
+   * @param value - value to assign to the target[property].
+   * @param receiver - the object to which the assignment was originally directed (usually the Proxy object).
+     */
+  set: function(target, property, value, receiver){
+    let rawTarget = target();
+    if(rawTarget === undefined){ return; }
+
+    if(typeof(value)==='function' && value.__is_nn_default__){
+      let currentRawPropertyValue = rawTarget[property];
+      rawTarget[property] = currentRawPropertyValue === undefined ? value() : currentRawPropertyValue;
+    }else{
+      rawTarget[property] = value;
+    }
+
   }
 };
 
@@ -63,5 +85,14 @@ const handler = {
  * Cache the undefined version for speed.
  */
 const nnUndefinedProperty = nn(undefined);
+
+nn.default = (defaultValue)=>{
+  let result = ()=>{
+    return defaultValue;
+  };
+  result.__is_nn_default__ = true;
+
+  return result;
+}
 
 module.exports = nn;
