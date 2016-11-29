@@ -26,9 +26,12 @@ describe("nevernull", ()=>{
         b:'someValue'
       },
       c: 42,
-      d: false,
+      d: ['a', 'b'],
       e: function(){return 22;},
-      f: function(){return this.c;}
+      f: function(){return this.c;},
+      get g(){
+        return this.c;
+      }
     };
     let testObject = nn(mockObject);
 
@@ -39,6 +42,10 @@ describe("nevernull", ()=>{
     expect(testObject.d()).toEqual(mockObject.d);
     expect( testObject.e()() ).toEqual(mockObject.e());
     expect( testObject.f()() ).toEqual(mockObject.f());
+
+    expect( testObject.g()).toEqual(mockObject.g);
+    mockObject.c = 1;
+    expect( testObject.g()).toEqual(mockObject.g);
   });
 
   it("should reflect changes made to underlying object", ()=>{
@@ -61,6 +68,12 @@ describe("nevernull", ()=>{
     let mockObject = {
       a: {
         b: 'string'
+      },
+      set c(value){
+        this.a.b = value;
+      },
+      get c(){
+        return this.a.b;
       }
     };
 
@@ -71,13 +84,24 @@ describe("nevernull", ()=>{
 
     testObject().a = {b:'yet another string'};
     expect(testObject.a.b()).toEqual(mockObject.a.b);
+    expect(testObject.c()).toEqual(mockObject.c);
 
+    testObject.c = 'some other string';
+    expect(testObject.c()).toEqual(mockObject.c);
   });
 
   it("should behave as normal objects when working with detached sub properties", ()=>{
     let person = {
       name: {
-        first: 'jason'
+        first: 'jason',
+        get fullName(){
+          return `${this.first} ${this.last}`;
+        },
+        set fullName(value){
+          let [first, last] = value.split(' ');
+          this.first = first;
+          this.last = last;
+        }
       }
     };
 
@@ -87,12 +111,22 @@ describe("nevernull", ()=>{
     nnName().first = 'bill';
     expect(nnName()).toEqual(person.name);
 
+    nnPerson.name.fullName = 'jason mcaffee';
+    expect(nnPerson.name.first()).toEqual('jason');
+    expect(nnPerson.name.last()).toEqual('mcaffee');
+
     //when reassigning detached properties, values are no longer expected to be equal
     let name = person.name;
-    person.name = { first: 'julie' };
+    person.name = {first: 'julie'};
 
     expect(nnName()).toEqual(name);
     expect(person.name).not.toEqual(nnName());
+
+    //since we overwrote name with an object that does not have getters/setters for fullName, setting full name results in:
+    nnPerson.name.fullName = 'jason mcaffee';
+    expect(nnPerson.name.fullName()).toEqual('jason mcaffee');
+    expect(nnPerson.name.first()).toEqual('julie');
+    expect(nnPerson.name.last()).toEqual(undefined);
   });
 
   it("should allow property values to be safely set", ()=>{
